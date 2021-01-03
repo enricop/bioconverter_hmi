@@ -24,5 +24,6 @@ QML_IMPORT_PATH =
 QML_DESIGNER_IMPORT_PATH =
 
 CONFIG += qmltypes
-QML_IMPORT_NAME = bioconverter.backend
+
+QML_IMPORT_NAME = bioconverter
 QML_IMPORT_MAJOR_VERSION = 1

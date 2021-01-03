@@ -19,7 +19,7 @@ class Backend : public QObject
 
 	Q_DISABLE_COPY(Backend)
 
-	QML_ELEMENT
+	QML_NAMED_ELEMENT(Backend)
 
 	Q_PROPERTY(SerialPort_ReaderWriter* serialport READ spgetter)
 
