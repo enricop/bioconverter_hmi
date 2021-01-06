@@ -8,11 +8,15 @@ DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs depr
 
 SOURCES += \
         backend.cpp \
+        commands.cpp \
         main.cpp \
+        protocol_masterslave.cpp \
         serialport_readerwriter.cpp
 
 HEADERS += \
     backend.hpp \
+    commands.hpp \
+    protocol_masterslave.hpp \
 	serialport_readerwriter.hpp
 
 RESOURCES += qml.qrc

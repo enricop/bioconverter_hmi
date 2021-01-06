@@ -10,6 +10,7 @@
 namespace bioconverter {
 
 class SerialPort_ReaderWriter;
+class Protocol_MasterSlave;
 
 class Backend : public QObject
 {
@@ -20,6 +21,7 @@ class Backend : public QObject
 	QML_NAMED_ELEMENT(Backend)
 
 	Q_PROPERTY(bioconverter::SerialPort_ReaderWriter* serialport READ spgetter CONSTANT)
+	Q_PROPERTY(bioconverter::Protocol_MasterSlave* protocol READ protogetter CONSTANT)
 
 public:
 	explicit Backend(QObject *parent = nullptr);
@@ -27,10 +29,12 @@ public:
 	~Backend();
 
 	SerialPort_ReaderWriter* spgetter() const;
+	Protocol_MasterSlave* protogetter() const;
 
 Q_SIGNALS:
 
 private:
+	std::unique_ptr<Protocol_MasterSlave> protocol_instance;
 	std::unique_ptr<SerialPort_ReaderWriter> serial_instance;
 };
 
