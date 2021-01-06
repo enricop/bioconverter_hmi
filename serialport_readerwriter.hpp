@@ -7,9 +7,12 @@
 #include <QByteArray>
 #include <QTextStream>
 
+#include <qqml.h>
+
 #include <memory>
 
 class QTimer;
+class QThread;
 
 namespace bioconverter {
 
@@ -19,22 +22,33 @@ class SerialPort_ReaderWriter : public QObject
 
 	Q_DISABLE_COPY(SerialPort_ReaderWriter)
 
-	Q_PROPERTY(QString readOutput MEMBER readOutput NOTIFY readOutputChanged)
-	Q_PROPERTY(QString writeOutput MEMBER writeOutput NOTIFY writeOutputChanged)
-	Q_PROPERTY(QString controlOutput MEMBER controlOutput NOTIFY controlOutputChanged)
+	QML_NAMED_ELEMENT(SerialPort_ReaderWriter)
+	QML_UNCREATABLE("SerialPort_ReaderWriter is always a named property of backend")
+
+	Q_PROPERTY(QString readOutput READ getReadOutput NOTIFY readOutputChanged)
+	Q_PROPERTY(QString writeOutput READ getWriteOutput NOTIFY writeOutputChanged)
+	Q_PROPERTY(QString controlOutput READ getControlOutput NOTIFY controlOutputChanged)
 
 public:
 	explicit SerialPort_ReaderWriter(QObject *parent = nullptr);
 	~SerialPort_ReaderWriter();
 
-	QStringList getAvailableSerialPorts();
+	QString getReadOutput() {
+		return readOutput;
+	}
+	QString getWriteOutput() {
+		return writeOutput;
+	}
+	QString getControlOutput() {
+		return controlOutput;
+	}
 
-	int init(const QString serialportname);
+	Q_INVOKABLE	qint64 write(const QByteArray &writeData);
 
-public slots:
-	qint64 write(const QByteArray &writeData);
+public Q_SLOTS:
+	void openSerialPort();
 
-private slots:
+private Q_SLOTS:
 	void handleReadyRead();
 	void handleReadTimeout();
 
@@ -43,12 +57,15 @@ private slots:
 
 	void handleError(QSerialPort::SerialPortError error);
 
-signals:
+Q_SIGNALS:
 	void readOutputChanged();
 	void writeOutputChanged();
 	void controlOutputChanged();
 
 private:
+	QStringList getAvailableSerialPorts();
+
+	std::unique_ptr<QThread> serialWorker;
 	std::unique_ptr<QSerialPort> serialPort;
 
 	QByteArray m_readData;
@@ -62,11 +79,10 @@ private:
 	QTextStream m_writeOutput;
 	QTextStream m_controlOutput;
 
-	qint64 m_bytesWritten = 0;
+	qint64 m_bytesWritten;
 
 	std::unique_ptr<QTimer> readTimer;
 	std::unique_ptr<QTimer> writeTimer;
-
 };
 
 }

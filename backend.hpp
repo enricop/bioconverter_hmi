@@ -7,8 +7,6 @@
 
 #include <memory>
 
-class QThread;
-
 namespace bioconverter {
 
 class SerialPort_ReaderWriter;
@@ -21,7 +19,7 @@ class Backend : public QObject
 
 	QML_NAMED_ELEMENT(Backend)
 
-	Q_PROPERTY(SerialPort_ReaderWriter* serialport READ spgetter)
+	Q_PROPERTY(bioconverter::SerialPort_ReaderWriter* serialport READ spgetter CONSTANT)
 
 public:
 	explicit Backend(QObject *parent = nullptr);
@@ -30,10 +28,9 @@ public:
 
 	SerialPort_ReaderWriter* spgetter() const;
 
-signals:
+Q_SIGNALS:
 
 private:
-	std::unique_ptr<QThread> serial_worker;
 	std::unique_ptr<SerialPort_ReaderWriter> serial_instance;
 };
 
