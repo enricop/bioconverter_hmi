@@ -31,6 +31,13 @@ void Protocol_MasterSlave::runCommand(const Protocol_MasterSlave::CommandName cm
 
 	QVariantList output;
 
+	if (current_command != CommandName::INVALID) {
+		m_protocolOutput << "The system is currently executing another command :" << metaEnum.valueToKey(static_cast<int>(current_command));
+		Q_EMIT protocolOutputChanged();
+		Q_EMIT commandResult(cmd, -9, output);
+		return;
+	}
+
 	if (!protocol_commands.count(cmd)) {
 		m_protocolOutput << "Unsupported command: " << static_cast<unsigned int>(cmd);
 		Q_EMIT protocolOutputChanged();
@@ -103,8 +110,7 @@ void Protocol_MasterSlave::serialDataHandler(const QByteArray dataRead)
 	for (const auto b : qAsConst(dataRead)) {
 		checksum = checksum ^ b;
 	}
-	if (dataRead.at(9) != checksum)
-	{
+	if (dataRead.at(9) != checksum) {
 		m_protocolOutput << "Invalid checksum data received for command: " << metaEnum.valueToKey(static_cast<int>(current_command));
 		Q_EMIT protocolOutputChanged();
 		Q_EMIT commandResult(current_command, -7, output);

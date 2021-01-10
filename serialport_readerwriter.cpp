@@ -169,8 +169,8 @@ void SerialPort_ReaderWriter::handleReadTimeout()
 						 << "\n";
 		m_readOutput << m_readData << "\n";
 
-		Q_EMIT dataRead(m_readData);
 	}
+	Q_EMIT dataRead(m_readData);
 	m_readData.clear();
 	Q_EMIT readOutputChanged();
 }
@@ -227,6 +227,8 @@ void SerialPort_ReaderWriter::handleError(QSerialPort::SerialPortError error)
 		Q_EMIT controlOutputChanged();
 	}
 
+	QMetaObject::invokeMethod(writeTimer.get(), "stop", Qt::QueuedConnection);
+	QMetaObject::invokeMethod(readTimer.get(), "stop", Qt::QueuedConnection);
 	m_bytesWritten = 0;
 	m_writeData.clear();
 	m_readData.clear();

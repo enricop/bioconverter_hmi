@@ -5,8 +5,8 @@ import QtQuick.Layouts 1.12
 import bioconverter 1.0
 
 ApplicationWindow {
-    width: 640
-    height: 480
+    width: 800
+    height: 600
     visible: true
     title: qsTr("Scroll")
 
@@ -29,7 +29,22 @@ ApplicationWindow {
             Label {
                 text: bio_backend.serialport.controlOutput
             }
+            Label {
+                text: bio_backend.serialport.writeOutput
+            }
+            Label {
+                text: bio_backend.serialport.readOutput
+            }
 
+        }
+
+        ListModel {
+            id: commands
+
+            ListElement {
+                name: GET_SYSTEM_INFO_1
+                cmd: Protocol_MasterSlave.GET_SYSTEM_INFO_1
+            }
         }
 
         ScrollView {
@@ -42,11 +57,36 @@ ApplicationWindow {
                 enabled: false
 
                 width: parent.width
-                model: 20
+                model: commands
                 delegate: ItemDelegate {
-                    text: "Item " + (index + 1)
+                    text: "Item " + name
                     width: listView.width
+                    onClicked: {
+                        bio_backend.protocol.runCommand(cmd, []);
+                        cmd_timer.start();
+                    }
                 }
+            }
+        }
+
+        Connections {
+           target: bio_backend.protocol
+           function onCommandResult(cmd, result, output) {
+               cmd_timer.stop();
+               console.log("Executed command: ", cmd);
+               console.log("Result of command: ", result);
+               console.log("Output of command: ", output);
+           }
+        }
+
+        Timer {
+            id: cmd_timer
+            interval: 5000
+            repeat: false
+            running: false
+            triggeredOnStart: false
+            onTriggered: {
+                console.log("Command timed out!");
             }
         }
     }
