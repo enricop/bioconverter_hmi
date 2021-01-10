@@ -11,6 +11,7 @@ Protocol_MasterSlave::Protocol_MasterSlave(const std::shared_ptr<SerialPort_Read
 	: QObject(parent),
 	  protocolOutput{},
 	  m_protocolOutput(&protocolOutput),
+	  current_command(CommandName::INVALID),
 	  sp(sp)
 {
 	protocol_commands.emplace(CommandName::GET_SYSTEM_INFO_1, std::make_unique<Get_System_Info_1>());
@@ -59,7 +60,7 @@ void Protocol_MasterSlave::runCommand(const Protocol_MasterSlave::CommandName cm
 
 	std::uint8_t checksum = 0;
 	for (const auto b : qAsConst(bytesToBeWriteen)) {
-		checksum = checksum ^ b;
+		checksum += b;
 	}
 	bytesToBeWriteen.append(checksum);
 
@@ -106,9 +107,10 @@ void Protocol_MasterSlave::serialDataHandler(const QByteArray dataRead)
 		return;
 	}
 
+	QByteArray bytesRead = dataRead.left(9);
 	std::uint8_t checksum = 0;
-	for (const auto b : qAsConst(dataRead)) {
-		checksum = checksum ^ b;
+	for (const auto b : qAsConst(bytesRead)) {
+		checksum += b;
 	}
 	if (dataRead.at(9) != checksum) {
 		m_protocolOutput << "Invalid checksum data received for command: " << metaEnum.valueToKey(static_cast<int>(current_command));
@@ -118,7 +120,7 @@ void Protocol_MasterSlave::serialDataHandler(const QByteArray dataRead)
 		return;
 	}
 
-	QByteArray bytesRead = dataRead.mid(2, 7);
+	bytesRead = bytesRead.right(7);
 	const auto ret_slave = protocol_commands.at(current_command)->slaveResponse(bytesRead, output);
 	if (ret_slave) {
 		m_protocolOutput << "Invalid input bytes for slave Response of command: " << metaEnum.valueToKey(static_cast<int>(current_command));

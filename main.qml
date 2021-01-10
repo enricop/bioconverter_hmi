@@ -22,7 +22,10 @@ ApplicationWindow {
             Button {
                 text: "Init Serial Port"
                 onClicked: {
-                    bio_backend.serialport.openSerialPort();
+                    var ret = bio_backend.serialport.openSerialPort();
+                    if (ret) {
+                        listView.enabled = true;
+                    }
                 }
             }
 
@@ -38,11 +41,19 @@ ApplicationWindow {
 
         }
 
+        RowLayout {
+
+            Label {
+                text: bio_backend.protocol.protocolOutput
+            }
+
+        }
+
         ListModel {
             id: commands
 
             ListElement {
-                name: GET_SYSTEM_INFO_1
+                name: "GET_SYSTEM_INFO_1"
                 cmd: Protocol_MasterSlave.GET_SYSTEM_INFO_1
             }
         }
@@ -62,8 +73,8 @@ ApplicationWindow {
                     text: "Item " + name
                     width: listView.width
                     onClicked: {
-                        bio_backend.protocol.runCommand(cmd, []);
                         cmd_timer.start();
+                        bio_backend.protocol.runCommand(cmd, []);
                     }
                 }
             }
@@ -81,7 +92,7 @@ ApplicationWindow {
 
         Timer {
             id: cmd_timer
-            interval: 5000
+            interval: 10000
             repeat: false
             running: false
             triggeredOnStart: false

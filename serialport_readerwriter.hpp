@@ -16,6 +16,8 @@ class QThread;
 
 namespace bioconverter {
 
+class SerialWorker_Bridge;
+
 class SerialPort_ReaderWriter : public QObject
 {
 	Q_OBJECT
@@ -45,8 +47,7 @@ public:
 
 	qint64 write(const QByteArray &writeData);
 
-public Q_SLOTS:
-	void openSerialPort();
+	Q_INVOKABLE bool openSerialPort();
 
 private Q_SLOTS:
 	void handleReadyRead();
@@ -67,8 +68,9 @@ Q_SIGNALS:
 private:
 	QStringList getAvailableSerialPorts();
 
-	std::unique_ptr<QThread> serialWorker;
-	std::unique_ptr<QSerialPort> serialPort;
+	const std::unique_ptr<QThread> serialWorker;
+	const std::shared_ptr<QSerialPort> serialPort;
+	const std::unique_ptr<SerialWorker_Bridge> serialBridge;
 
 	QByteArray m_readData;
 	QByteArray m_writeData;
