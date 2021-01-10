@@ -8,8 +8,8 @@ namespace bioconverter {
 
 Backend::Backend(QObject *parent)
 	: QObject(parent),
-	  protocol_instance(std::make_unique<Protocol_MasterSlave>()),
-	  serial_instance(std::make_unique<SerialPort_ReaderWriter>())
+	  serial_instance(std::make_shared<SerialPort_ReaderWriter>()),
+	  protocol_instance(std::make_unique<Protocol_MasterSlave>(serial_instance))
 {
 
 }

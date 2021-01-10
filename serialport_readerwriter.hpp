@@ -43,7 +43,7 @@ public:
 		return controlOutput;
 	}
 
-	Q_INVOKABLE	qint64 write(const QByteArray &writeData);
+	qint64 write(const QByteArray &writeData);
 
 public Q_SLOTS:
 	void openSerialPort();
@@ -62,6 +62,8 @@ Q_SIGNALS:
 	void writeOutputChanged();
 	void controlOutputChanged();
 
+	void dataRead(const QByteArray dataRead);
+
 private:
 	QStringList getAvailableSerialPorts();
 
@@ -70,6 +72,7 @@ private:
 
 	QByteArray m_readData;
 	QByteArray m_writeData;
+	qint64 m_bytesWritten;
 
 	QString readOutput;
 	QString writeOutput;
@@ -78,8 +81,6 @@ private:
 	QTextStream m_readOutput;
 	QTextStream m_writeOutput;
 	QTextStream m_controlOutput;
-
-	qint64 m_bytesWritten;
 
 	std::unique_ptr<QTimer> readTimer;
 	std::unique_ptr<QTimer> writeTimer;

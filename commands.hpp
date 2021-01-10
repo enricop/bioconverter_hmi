@@ -12,8 +12,8 @@ public:
 	Command() = default;
 	virtual ~Command() = default;
 
-	virtual int masterCommand(const QList<QVariant> &input, const QByteArray &output) const = 0;
-	virtual int slaveResponse(const QByteArray &input, const QList<QVariant> &output) const = 0;
+	virtual int masterCommand(const QList<QVariant> &input, QByteArray &output) const = 0;
+	virtual int slaveResponse(const QByteArray &input, QList<QVariant> &output) const = 0;
 };
 
 class Get_System_Info_1 : public QObject,  public Command {
@@ -26,8 +26,8 @@ class Get_System_Info_1 : public QObject,  public Command {
 public:
 	explicit Get_System_Info_1(QObject *parent = nullptr) : QObject(parent) {};
 
-	virtual int masterCommand(const QList<QVariant> &input, const QByteArray &output) const override;
-	virtual int slaveResponse(const QByteArray &input, const QList<QVariant> &output) const override;
+	virtual int masterCommand(const QList<QVariant> &input, QByteArray &output) const override;
+	virtual int slaveResponse(const QByteArray &input, QList<QVariant> &output) const override;
 };
 
 }

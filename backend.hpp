@@ -34,8 +34,8 @@ public:
 Q_SIGNALS:
 
 private:
+	std::shared_ptr<SerialPort_ReaderWriter> serial_instance;
 	std::unique_ptr<Protocol_MasterSlave> protocol_instance;
-	std::unique_ptr<SerialPort_ReaderWriter> serial_instance;
 };
 
 }

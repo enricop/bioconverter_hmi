@@ -12,6 +12,8 @@
 
 namespace bioconverter {
 
+class SerialPort_ReaderWriter;
+
 class Protocol_MasterSlave : public QObject
 {
 	Q_OBJECT
@@ -24,10 +26,13 @@ class Protocol_MasterSlave : public QObject
 	Q_PROPERTY(QString protocolOutput READ getProtocolOutput NOTIFY protocolOutputChanged)
 
 public:
-	explicit Protocol_MasterSlave(QObject *parent = nullptr);
+	explicit Protocol_MasterSlave(const std::shared_ptr<SerialPort_ReaderWriter> sp,
+								  QObject *parent = nullptr);
+	~Protocol_MasterSlave();
 
 	enum class CommandName
 	{
+		INVALID = 0,
 		GET_SYSTEM_INFO_1 = 0x05,
 		GET_SYSTEM_INFO_2 = 0x06,
 		GET_TAGS_NUMBER_AND_POSITION_0TO5 = 0x08,
@@ -38,6 +43,7 @@ public:
 		GET_SINGLE_CONTAINER_PARAMETERS2_BY_POS = 0x0D,
 		TRY_TO_INSERT_NEW_CONTAINER = 0x64,
 		SET_SINGLE_CONTAINER_PARAMETERS1 = 0x32,
+		ERASE_EEPROM_RESET_SYSTEM = 0x51
 	};
 
 	Q_ENUM(CommandName)
@@ -49,8 +55,11 @@ public:
 public Q_SLOTS:
 	void runCommand(const enum CommandName cmd, const QList<QVariant> &input);
 
+private Q_SLOTS:
+	void serialDataHandler(const QByteArray dataRead);
+
 Q_SIGNALS:
-	void commandExecuted(const enum CommandName cmd, const int result);
+	void commandResult(const enum CommandName cmd, const int result, const QVariantList output);
 
 	void protocolOutputChanged();
 
@@ -58,7 +67,11 @@ private:
 	QString protocolOutput;
 	QTextStream m_protocolOutput;
 
-	std::map<CommandName, std::unique_ptr<Command>> protocol_commands;
+	CommandName current_command;
+
+	const std::shared_ptr<SerialPort_ReaderWriter> sp;
+
+	std::map<const CommandName, const std::unique_ptr<Command>> protocol_commands;
 };
 
 }

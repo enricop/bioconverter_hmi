@@ -13,6 +13,7 @@ SerialPort_ReaderWriter::SerialPort_ReaderWriter(QObject *parent)
 	  serialPort(std::make_unique<QSerialPort>()),
 	  m_readData{},
 	  m_writeData{},
+	  m_bytesWritten{},
 	  readOutput{},
 	  writeOutput{},
 	  controlOutput{},
@@ -25,6 +26,9 @@ SerialPort_ReaderWriter::SerialPort_ReaderWriter(QObject *parent)
 	serialPort->moveToThread(serialWorker.get());
 	writeTimer->moveToThread(serialWorker.get());
 	readTimer->moveToThread(serialWorker.get());
+
+	readTimer->setSingleShot(true);
+	writeTimer->setSingleShot(true);
 
 	//READ
 	QObject::connect(serialPort.get(), &QSerialPort::readyRead, this, &SerialPort_ReaderWriter::handleReadyRead, Qt::QueuedConnection);
@@ -136,9 +140,9 @@ qint64 SerialPort_ReaderWriter::write(const QByteArray &writeData)
 							.arg(serialPort->errorString())
 						 << "\n";
 		Q_EMIT writeOutputChanged();
+	} else {
+		QMetaObject::invokeMethod(writeTimer.get(), "start", Qt::QueuedConnection, Q_ARG(int, 5000));
 	}
-
-	writeTimer->start(5000);
 
 	return bytesWritten;
 }
@@ -147,8 +151,9 @@ void SerialPort_ReaderWriter::handleReadyRead()
 {
 	m_readData.append(serialPort->readAll());
 
-	if (!readTimer->isActive())
-		readTimer->start(5000);
+	if (!readTimer->isActive()) {
+		QMetaObject::invokeMethod(readTimer.get(), "start", Qt::QueuedConnection, Q_ARG(int, 2000));
+	}
 }
 
 void SerialPort_ReaderWriter::handleReadTimeout()
@@ -159,11 +164,14 @@ void SerialPort_ReaderWriter::handleReadTimeout()
 							.arg(serialPort->portName())
 						 << "\n";
 	} else {
-		m_readOutput << QObject::tr("Data successfully received from port %1")
+		m_readOutput << QObject::tr("Data successfully received from port %1. Bytes: ")
 							.arg(serialPort->portName())
 						 << "\n";
 		m_readOutput << m_readData << "\n";
+
+		Q_EMIT dataRead(m_readData);
 	}
+	m_readData.clear();
 	Q_EMIT readOutputChanged();
 }
 
@@ -171,7 +179,9 @@ void SerialPort_ReaderWriter::handleBytesWritten(qint64 bytes)
 {
 	m_bytesWritten += bytes;
 	if (m_bytesWritten == m_writeData.size()) {
+		QMetaObject::invokeMethod(writeTimer.get(), "stop", Qt::QueuedConnection);
 		m_bytesWritten = 0;
+		m_writeData.clear();
 		m_writeOutput << QObject::tr("Data successfully written to port %1")
 							.arg(serialPort->portName()) << "\n";
 		Q_EMIT writeOutputChanged();
@@ -184,6 +194,8 @@ void SerialPort_ReaderWriter::handleWriteTimeout()
 						.arg(serialPort->portName())
 						.arg(serialPort->errorString())
 				  << "\n";
+	m_bytesWritten = 0;
+	m_writeData.clear();
 	Q_EMIT writeOutputChanged();
 }
 
@@ -214,6 +226,10 @@ void SerialPort_ReaderWriter::handleError(QSerialPort::SerialPortError error)
 						 << "\n";
 		Q_EMIT controlOutputChanged();
 	}
+
+	m_bytesWritten = 0;
+	m_writeData.clear();
+	m_readData.clear();
 }
 
 }
