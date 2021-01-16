@@ -64,6 +64,7 @@ Q_SIGNALS:
 	void controlOutputChanged();
 
 	void dataRead(const QByteArray dataRead);
+	void dataError(int err);
 
 private:
 	QStringList getAvailableSerialPorts();

@@ -19,6 +19,9 @@ Protocol_MasterSlave::Protocol_MasterSlave(const std::shared_ptr<SerialPort_Read
 	QObject::connect(sp.get(), &SerialPort_ReaderWriter::dataRead,
 					 this, &Protocol_MasterSlave::serialDataHandler,
 					 Qt::ConnectionType::QueuedConnection);
+	QObject::connect(sp.get(), &SerialPort_ReaderWriter::dataError,
+					 this, &Protocol_MasterSlave::serialErrorHandler,
+					 Qt::ConnectionType::QueuedConnection);
 }
 
 Protocol_MasterSlave::~Protocol_MasterSlave()
@@ -51,7 +54,7 @@ void Protocol_MasterSlave::runCommand(const Protocol_MasterSlave::CommandName cm
 	bytesToBeWriteen.append(static_cast<char>(cmd));
 
 	const auto ret_master = protocol_commands.at(cmd)->masterCommand(input, bytesToBeWriteen);
-	if (ret_master) {
+	if (ret_master || bytesToBeWriteen.size() != 9) {
 		m_protocolOutput << "Invalid input data for master command: " << metaEnum.valueToKey(static_cast<int>(cmd));
 		Q_EMIT protocolOutputChanged();
 		Q_EMIT commandResult(cmd, -2, output);
@@ -131,6 +134,14 @@ void Protocol_MasterSlave::serialDataHandler(const QByteArray dataRead)
 	}
 
 	Q_EMIT commandResult(current_command, 0, output);
+	current_command = CommandName::INVALID;
+}
+
+void Protocol_MasterSlave::serialErrorHandler(int error)
+{
+	m_protocolOutput << "Serial protocol error: " << error << "\n";
+	Q_EMIT protocolOutputChanged();
+	Q_EMIT commandResult(current_command, -10, QVariantList());
 	current_command = CommandName::INVALID;
 }
 

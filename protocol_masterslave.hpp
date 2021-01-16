@@ -62,6 +62,7 @@ public Q_SLOTS:
 
 private Q_SLOTS:
 	void serialDataHandler(const QByteArray dataRead);
+	void serialErrorHandler(int error);
 
 Q_SIGNALS:
 	void commandResult(const enum CommandName cmd, const int result, const QVariantList output);

@@ -8,6 +8,11 @@
 
 namespace bioconverter {
 
+constexpr int READ_TIMEOUT { 6000 };
+constexpr int WRITE_TIMEOUT { 6000 };
+
+constexpr int PROTOCOL_FRAME_SIZE { 10 };
+
 SerialPort_ReaderWriter::SerialPort_ReaderWriter(QObject *parent)
 	: QObject(parent),
 	  serialWorker(std::make_unique<QThread>()),
@@ -164,7 +169,7 @@ qint64 SerialPort_ReaderWriter::write(const QByteArray &writeData)
 						 << "\n";
 		Q_EMIT writeOutputChanged();
 	} else {
-		QMetaObject::invokeMethod(writeTimer.get(), "start", Qt::QueuedConnection, Q_ARG(int, 5000));
+		QMetaObject::invokeMethod(writeTimer.get(), "start", Qt::QueuedConnection, Q_ARG(int, WRITE_TIMEOUT));
 	}
 
 	return bytesWritten;
@@ -174,8 +179,8 @@ void SerialPort_ReaderWriter::handleReadyRead()
 {
 	m_readData.append(serialPort->readAll());
 
-	if (!readTimer->isActive()) {
-		QMetaObject::invokeMethod(readTimer.get(), "start", Qt::QueuedConnection, Q_ARG(int, 5000));
+	if (m_readData.size() >= PROTOCOL_FRAME_SIZE) {
+		QMetaObject::invokeMethod(readTimer.get(), "start", Qt::QueuedConnection, Q_ARG(int, 0));
 	}
 }
 
@@ -186,14 +191,17 @@ void SerialPort_ReaderWriter::handleReadTimeout()
 										"for reading from port %1")
 							.arg(serialPort->portName())
 						 << "\n";
+		Q_EMIT dataError(-1);
+	} else if (m_readData.size() < PROTOCOL_FRAME_SIZE) {
+		m_readOutput << QObject::tr("Incomplete frame received\n");
+		Q_EMIT dataError(-2);
 	} else {
 		m_readOutput << QObject::tr("Data successfully received from port %1. Bytes: ")
 							.arg(serialPort->portName())
 						 << "\n";
 		m_readOutput << m_readData.toHex(':') << "\n";
-
+		Q_EMIT dataRead(m_readData);
 	}
-	Q_EMIT dataRead(m_readData);
 	m_readData.clear();
 	Q_EMIT readOutputChanged();
 }
@@ -201,14 +209,16 @@ void SerialPort_ReaderWriter::handleReadTimeout()
 void SerialPort_ReaderWriter::handleBytesWritten(qint64 bytes)
 {
 	m_bytesWritten += bytes;
-	if (m_bytesWritten == m_writeData.size()) {
-		QMetaObject::invokeMethod(writeTimer.get(), "stop", Qt::QueuedConnection);
-		m_bytesWritten = 0;
-		m_writeData.clear();
-		m_writeOutput << QObject::tr("Data successfully written to port %1")
-							.arg(serialPort->portName()) << "\n";
-		Q_EMIT writeOutputChanged();
-	}
+	if (m_bytesWritten != m_writeData.size())
+		return;
+
+	QMetaObject::invokeMethod(writeTimer.get(), "stop", Qt::QueuedConnection);
+	m_bytesWritten = 0;
+	m_writeData.clear();
+	m_writeOutput << QObject::tr("Data successfully written to port %1")
+						.arg(serialPort->portName()) << "\n";
+	Q_EMIT writeOutputChanged();
+	QMetaObject::invokeMethod(readTimer.get(), "start", Qt::QueuedConnection, Q_ARG(int, READ_TIMEOUT));
 }
 
 void SerialPort_ReaderWriter::handleWriteTimeout()
@@ -220,6 +230,7 @@ void SerialPort_ReaderWriter::handleWriteTimeout()
 	m_bytesWritten = 0;
 	m_writeData.clear();
 	Q_EMIT writeOutputChanged();
+	Q_EMIT dataError(-3);
 }
 
 void SerialPort_ReaderWriter::handleError(QSerialPort::SerialPortError error)
@@ -231,6 +242,7 @@ void SerialPort_ReaderWriter::handleError(QSerialPort::SerialPortError error)
 							.arg(serialPort->errorString())
 						 << "\n";
 		Q_EMIT writeOutputChanged();
+		Q_EMIT dataError(-4);
 	} else if (error == QSerialPort::ReadError) {
 		m_readOutput << QObject::tr("An I/O error occurred while reading "
 										"the data from port %1, error: %2")
@@ -238,6 +250,7 @@ void SerialPort_ReaderWriter::handleError(QSerialPort::SerialPortError error)
 							.arg(serialPort->errorString())
 						 << "\n";
 		Q_EMIT readOutputChanged();
+		Q_EMIT dataError(-5);
 	} else if (error != QSerialPort::SerialPortError::NoError) {
 		QMetaEnum metaEnum = QMetaEnum::fromType<QSerialPort::SerialPortError>();
 
@@ -248,6 +261,7 @@ void SerialPort_ReaderWriter::handleError(QSerialPort::SerialPortError error)
 							.arg(serialPort->errorString())
 						 << "\n";
 		Q_EMIT controlOutputChanged();
+		Q_EMIT dataError(-6);
 	}
 
 	QMetaObject::invokeMethod(writeTimer.get(), "stop", Qt::QueuedConnection);

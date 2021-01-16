@@ -16,32 +16,43 @@ int Get_System_Info_1::slaveResponse(const QByteArray &input, QList<QVariant> &o
 	if (input.size() != 7)
 		return -1;
 
-	if (static_cast<unsigned int>(input.at(0)) != status) {
-		status = input.at(0);
+	const auto s = static_cast<Status>(input.at(0));
+	if (s != status) {
+		status = s;
 		Q_EMIT statusChanged();
 	}
-	if (static_cast<unsigned int>(input.at(1)) != action) {
-		action = input.at(0);
+	const auto a = static_cast<Action>(input.at(1));
+	if (a != action) {
+		action = a;
 		Q_EMIT actionChanged();
 	}
-	if (static_cast<unsigned int>(input.at(2)) != foodAvailable) {
-		foodAvailable = input.at(0);
+	const auto f = static_cast<FoodAvailable>(input.at(2));
+	if (f != foodAvailable) {
+		foodAvailable = f;
 		Q_EMIT foodAvailableChanged();
 	}
-	if (static_cast<unsigned int>(input.at(3)) != positionToProcess) {
-		positionToProcess = input.at(0);
+	const auto p = static_cast<int>(input.at(3));
+	if (p != positionToProcess) {
+		positionToProcess = p;
 		Q_EMIT positionToProcessChanged();
 	}
-	if (static_cast<unsigned int>(input.at(3) << 8 | input.at(4)) != functionInProgress) {
-		functionInProgress = input.at(0);
+	const auto fu = static_cast<Function>(input.at(4) << 8 | input.at(5));
+	if (fu != functionInProgress) {
+		functionInProgress = fu;
 		Q_EMIT functionInProgressChanged();
 	}
-	if (static_cast<unsigned int>(input.at(0)) != errorOccured) {
-		errorOccured = input.at(0);
+	const auto e = static_cast<Error>(input.at(6));
+	if (e != errorOccured) {
+		errorOccured = e;
 		Q_EMIT errorOccuredChanged();
 	}
 
-	output = { status, action, foodAvailable, positionToProcess, functionInProgress, errorOccured };
+	output = { QVariant::fromValue(status),
+			   QVariant::fromValue(action),
+			   QVariant::fromValue(foodAvailable),
+			   positionToProcess,
+			   QVariant::fromValue(functionInProgress),
+			   QVariant::fromValue(errorOccured) };
 	return 0;
 }
 
