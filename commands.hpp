@@ -4,6 +4,7 @@
 #include <QVariantList>
 #include <QByteArray>
 #include <QObject>
+#include <QTime>
 
 #include <qqml.h>
 
@@ -139,6 +140,36 @@ private:
 	Function functionInProgress;
 	Error errorOccured;
 };
+
+
+class Get_System_Info_2 : public QObject,  public Command
+{
+	Q_OBJECT
+
+	QML_NAMED_ELEMENT(Get_System_Info_2)
+	QML_UNCREATABLE("Get_System_Info_2 is always a named property of protocol")
+
+	Q_PROPERTY(QTime swapCycleTime READ getSwapCycleTime NOTIFY swapCycleTimeChanged)
+
+public:
+	explicit Get_System_Info_2(QObject *parent = nullptr) :
+		QObject(parent),
+		swapCycleTime{}
+	{};
+
+	virtual int masterCommand(const QList<QVariant> &input, QByteArray &output) const override;
+	virtual int slaveResponse(const QByteArray &input, QList<QVariant> &output) override;
+
+private:
+	QTime getSwapCycleTime() { return swapCycleTime; };
+
+Q_SIGNALS:
+	void swapCycleTimeChanged();
+
+private:
+	QTime swapCycleTime;
+};
+
 
 }
 

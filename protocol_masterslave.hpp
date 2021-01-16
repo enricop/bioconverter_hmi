@@ -26,6 +26,7 @@ class Protocol_MasterSlave : public QObject
 	Q_PROPERTY(QString protocolOutput READ getProtocolOutput NOTIFY protocolOutputChanged)
 
 	Q_PROPERTY(bioconverter::Get_System_Info_1* systeminfo1 READ get1 CONSTANT)
+	Q_PROPERTY(bioconverter::Get_System_Info_2* systeminfo2 READ get2 CONSTANT)
 
 public:
 	explicit Protocol_MasterSlave(const std::shared_ptr<SerialPort_ReaderWriter> sp,
@@ -55,6 +56,9 @@ public:
 	};
 	Get_System_Info_1* get1() {
 		return static_cast<Get_System_Info_1*>(protocol_commands.at(CommandName::GET_SYSTEM_INFO_1).get());
+	};
+	Get_System_Info_2* get2() {
+		return static_cast<Get_System_Info_2*>(protocol_commands.at(CommandName::GET_SYSTEM_INFO_2).get());
 	};
 
 public Q_SLOTS:

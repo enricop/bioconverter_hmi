@@ -56,6 +56,10 @@ ApplicationWindow {
                 name: "GET_SYSTEM_INFO_1"
                 cmd: Protocol_MasterSlave.GET_SYSTEM_INFO_1
             }
+            ListElement {
+                name: "GET_SYSTEM_INFO_2"
+                cmd: Protocol_MasterSlave.GET_SYSTEM_INFO_2
+            }
         }
 
         ScrollView {

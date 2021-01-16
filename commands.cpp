@@ -56,6 +56,42 @@ int Get_System_Info_1::slaveResponse(const QByteArray &input, QList<QVariant> &o
 	return 0;
 }
 
+int Get_System_Info_2::masterCommand(const QList<QVariant> &input, QByteArray &output) const
+{
+	Q_UNUSED(input);
+
+	output.append(7, 0x0);
+
+	return 0;
+}
+
+int Get_System_Info_2::slaveResponse(const QByteArray &input, QList<QVariant> &output)
+{
+	if (input.size() != 7)
+		return -1;
+
+	const auto hours = static_cast<int>(input.at(0));
+	if (hours < 0) {
+		swapCycleTime = QTime{};
+		Q_EMIT swapCycleTimeChanged();
+	}
+
+	const auto minutes = static_cast<int>(input.at(1) << 8 | input.at(2));
+	if (minutes < 0) {
+		swapCycleTime = QTime{};
+		Q_EMIT swapCycleTimeChanged();
+	}
+
+	QTime t(hours, minutes);
+	if (t != swapCycleTime) {
+		swapCycleTime = t;
+		Q_EMIT swapCycleTimeChanged();
+	}
+
+	output = { swapCycleTime };
+	return 0;
+}
+
 
 
 

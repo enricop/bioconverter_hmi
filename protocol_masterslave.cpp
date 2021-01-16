@@ -15,6 +15,7 @@ Protocol_MasterSlave::Protocol_MasterSlave(const std::shared_ptr<SerialPort_Read
 	  sp(sp)
 {
 	protocol_commands.emplace(CommandName::GET_SYSTEM_INFO_1, std::make_unique<Get_System_Info_1>());
+	protocol_commands.emplace(CommandName::GET_SYSTEM_INFO_2, std::make_unique<Get_System_Info_2>());
 
 	QObject::connect(sp.get(), &SerialPort_ReaderWriter::dataRead,
 					 this, &Protocol_MasterSlave::serialDataHandler,
@@ -36,14 +37,14 @@ void Protocol_MasterSlave::runCommand(const Protocol_MasterSlave::CommandName cm
 	QVariantList output;
 
 	if (current_command != CommandName::INVALID) {
-		m_protocolOutput << "The system is currently executing another command :" << metaEnum.valueToKey(static_cast<int>(current_command));
+		m_protocolOutput << "The system is currently executing another command :" << metaEnum.valueToKey(static_cast<int>(current_command)) << "\n";
 		Q_EMIT protocolOutputChanged();
 		Q_EMIT commandResult(cmd, -9, output);
 		return;
 	}
 
 	if (!protocol_commands.count(cmd)) {
-		m_protocolOutput << "Unsupported command: " << static_cast<unsigned int>(cmd);
+		m_protocolOutput << "Unsupported command: " << static_cast<unsigned int>(cmd) << "\n";
 		Q_EMIT protocolOutputChanged();
 		Q_EMIT commandResult(cmd, -1, output);
 		return;
@@ -55,7 +56,7 @@ void Protocol_MasterSlave::runCommand(const Protocol_MasterSlave::CommandName cm
 
 	const auto ret_master = protocol_commands.at(cmd)->masterCommand(input, bytesToBeWriteen);
 	if (ret_master || bytesToBeWriteen.size() != 9) {
-		m_protocolOutput << "Invalid input data for master command: " << metaEnum.valueToKey(static_cast<int>(cmd));
+		m_protocolOutput << "Invalid input data for master command: " << metaEnum.valueToKey(static_cast<int>(cmd)) << "\n";
 		Q_EMIT protocolOutputChanged();
 		Q_EMIT commandResult(cmd, -2, output);
 		return;
@@ -69,7 +70,7 @@ void Protocol_MasterSlave::runCommand(const Protocol_MasterSlave::CommandName cm
 
 	const auto nbytesWritten = sp->write(bytesToBeWriteen);
 	if (nbytesWritten != bytesToBeWriteen.size()) {
-		m_protocolOutput << "Failed writing master command: " << metaEnum.valueToKey(static_cast<int>(cmd));
+		m_protocolOutput << "Failed writing master command: " << metaEnum.valueToKey(static_cast<int>(cmd)) << "\n";
 		Q_EMIT protocolOutputChanged();
 		Q_EMIT commandResult(cmd, -3, output);
 		return;
@@ -83,7 +84,7 @@ void Protocol_MasterSlave::serialDataHandler(const QByteArray dataRead)
 	QVariantList output;
 
 	if (!protocol_commands.count(current_command)) {
-		m_protocolOutput << "Invalid current command type: " << static_cast<unsigned int>(current_command);
+		m_protocolOutput << "Invalid current command type: " << static_cast<unsigned int>(current_command) << "\n";
 		Q_EMIT protocolOutputChanged();
 		Q_EMIT commandResult(current_command, -4, output);
 		current_command = CommandName::INVALID;
@@ -92,7 +93,7 @@ void Protocol_MasterSlave::serialDataHandler(const QByteArray dataRead)
 
 	QMetaEnum metaEnum = QMetaEnum::fromType<Protocol_MasterSlave::CommandName>();
 	if (!dataRead.size()) {
-		m_protocolOutput << "Empty data received for command: " << metaEnum.valueToKey(static_cast<int>(current_command));
+		m_protocolOutput << "Empty data received for command: " << metaEnum.valueToKey(static_cast<int>(current_command)) << "\n";
 		Q_EMIT protocolOutputChanged();
 		Q_EMIT commandResult(current_command, -5, output);
 		current_command = CommandName::INVALID;
@@ -103,7 +104,7 @@ void Protocol_MasterSlave::serialDataHandler(const QByteArray dataRead)
 		dataRead.at(0) != 0x55 ||
 		dataRead.at(1) != static_cast<char>(current_command))
 	{
-		m_protocolOutput << "Invalid header data received for command: " << metaEnum.valueToKey(static_cast<int>(current_command));
+		m_protocolOutput << "Invalid header data received for command: " << metaEnum.valueToKey(static_cast<int>(current_command)) << "\n";
 		Q_EMIT protocolOutputChanged();
 		Q_EMIT commandResult(current_command, -6, output);
 		current_command = CommandName::INVALID;
@@ -116,7 +117,7 @@ void Protocol_MasterSlave::serialDataHandler(const QByteArray dataRead)
 		checksum += b;
 	}
 	if (dataRead.at(9) != checksum) {
-		m_protocolOutput << "Invalid checksum data received for command: " << metaEnum.valueToKey(static_cast<int>(current_command));
+		m_protocolOutput << "Invalid checksum data received for command: " << metaEnum.valueToKey(static_cast<int>(current_command)) << "\n";
 		Q_EMIT protocolOutputChanged();
 		Q_EMIT commandResult(current_command, -7, output);
 		current_command = CommandName::INVALID;
@@ -126,7 +127,7 @@ void Protocol_MasterSlave::serialDataHandler(const QByteArray dataRead)
 	bytesRead = bytesRead.right(7);
 	const auto ret_slave = protocol_commands.at(current_command)->slaveResponse(bytesRead, output);
 	if (ret_slave) {
-		m_protocolOutput << "Invalid input bytes for slave Response of command: " << metaEnum.valueToKey(static_cast<int>(current_command));
+		m_protocolOutput << "Cannot parse input bytes from slave response of command: " << metaEnum.valueToKey(static_cast<int>(current_command)) << "\n";
 		Q_EMIT protocolOutputChanged();
 		Q_EMIT commandResult(current_command, -8, output);
 		current_command = CommandName::INVALID;
