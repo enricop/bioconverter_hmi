@@ -90,7 +90,7 @@ private Q_SLOTS:
 	void serialErrorHandler(int error);
 
 Q_SIGNALS:
-	void commandResult(const enum CommandName cmd, const int result, const QVariantList output);
+	void commandResult(const QVariant cmd, const int result, const QVariantList output);
 
 	void protocolOutputChanged();
 
