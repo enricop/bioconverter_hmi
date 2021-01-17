@@ -170,6 +170,59 @@ private:
 	QTime swapCycleTime;
 };
 
+class Get_Tags_Number_And_Position_0To5 : public QObject,  public Command
+{
+	Q_OBJECT
+
+	QML_NAMED_ELEMENT(Get_Tags_Number_And_Position_0To5)
+	QML_UNCREATABLE("Get_Tags_Number_And_Position_0To5 is always a named property of protocol")
+
+	Q_PROPERTY(int pos0 READ getPos0 NOTIFY pos0Changed)
+	Q_PROPERTY(int pos1 READ getPos1 NOTIFY pos1Changed)
+	Q_PROPERTY(int pos2 READ getPos2 NOTIFY pos2Changed)
+	Q_PROPERTY(int pos3 READ getPos3 NOTIFY pos3Changed)
+	Q_PROPERTY(int pos4 READ getPos4 NOTIFY pos4Changed)
+	Q_PROPERTY(int pos5 READ getPos5 NOTIFY pos5Changed)
+
+public:
+	explicit Get_Tags_Number_And_Position_0To5(QObject *parent = nullptr) :
+		QObject(parent),
+		pos0{-1},
+		pos1{-1},
+		pos2{-1},
+		pos3{-1},
+		pos4{-1},
+		pos5{-1}
+	{};
+
+	virtual int masterCommand(const QList<QVariant> &input, QByteArray &output) const override;
+	virtual int slaveResponse(const QByteArray &input, QList<QVariant> &output) override;
+
+private:
+	int getPos0() { return pos0; };
+	int getPos1() { return pos1; };
+	int getPos2() { return pos2; };
+	int getPos3() { return pos3; };
+	int getPos4() { return pos4; };
+	int getPos5() { return pos5; };
+
+Q_SIGNALS:
+	void pos0Changed();
+	void pos1Changed();
+	void pos2Changed();
+	void pos3Changed();
+	void pos4Changed();
+	void pos5Changed();
+
+private:
+	int pos0;
+	int pos1;
+	int pos2;
+	int pos3;
+	int pos4;
+	int pos5;
+};
+
 
 }
 

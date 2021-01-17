@@ -16,6 +16,7 @@ Protocol_MasterSlave::Protocol_MasterSlave(const std::shared_ptr<SerialPort_Read
 {
 	protocol_commands.emplace(CommandName::GET_SYSTEM_INFO_1, std::make_unique<Get_System_Info_1>());
 	protocol_commands.emplace(CommandName::GET_SYSTEM_INFO_2, std::make_unique<Get_System_Info_2>());
+	protocol_commands.emplace(CommandName::GET_TAGS_NUMBER_AND_POSITION_0TO5, std::make_unique<Get_Tags_Number_And_Position_0To5>());
 
 	QObject::connect(sp.get(), &SerialPort_ReaderWriter::dataRead,
 					 this, &Protocol_MasterSlave::serialDataHandler,

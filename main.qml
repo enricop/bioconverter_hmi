@@ -60,6 +60,10 @@ ApplicationWindow {
                 name: "GET_SYSTEM_INFO_2"
                 cmd: Protocol_MasterSlave.GET_SYSTEM_INFO_2
             }
+            ListElement {
+                name: "GET_TAGS_NUMBER_AND_POSITION_0TO5"
+                cmd: Protocol_MasterSlave.GET_TAGS_NUMBER_AND_POSITION_0TO5
+            }
         }
 
         ScrollView {
