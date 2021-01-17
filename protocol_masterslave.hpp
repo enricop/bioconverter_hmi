@@ -31,6 +31,7 @@ class Protocol_MasterSlave : public QObject
 	Q_PROPERTY(bioconverter::Get_Tags_Number_And_Position_6To11* tags2 READ tags2 CONSTANT)
 	Q_PROPERTY(bioconverter::Get_Tags_Number_And_Position_12To17* tags3 READ tags3 CONSTANT)
 	Q_PROPERTY(bioconverter::Get_Tags_Number_And_Position_18To23* tags4 READ tags4 CONSTANT)
+	Q_PROPERTY(bioconverter::Get_Single_Container_Parameters1_By_Pos* contp1 READ contp1 CONSTANT)
 
 public:
 	explicit Protocol_MasterSlave(const std::shared_ptr<SerialPort_ReaderWriter> sp,
@@ -76,6 +77,10 @@ public:
 	Get_Tags_Number_And_Position_18To23* tags4() {
 		return static_cast<Get_Tags_Number_And_Position_18To23*>(protocol_commands.at(CommandName::GET_TAGS_NUMBER_AND_POSITION_18TO23).get());
 	};
+	Get_Single_Container_Parameters1_By_Pos* contp1() {
+		return static_cast<Get_Single_Container_Parameters1_By_Pos*>(protocol_commands.at(CommandName::GET_SINGLE_CONTAINER_PARAMETERS1_BY_POS).get());
+	};
+
 
 public Q_SLOTS:
 	void runCommand(const enum CommandName cmd, const QList<QVariant> &input);

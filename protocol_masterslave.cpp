@@ -20,6 +20,7 @@ Protocol_MasterSlave::Protocol_MasterSlave(const std::shared_ptr<SerialPort_Read
 	protocol_commands.emplace(CommandName::GET_TAGS_NUMBER_AND_POSITION_6TO11, std::make_unique<Get_Tags_Number_And_Position_6To11>());
 	protocol_commands.emplace(CommandName::GET_TAGS_NUMBER_AND_POSITION_12TO17, std::make_unique<Get_Tags_Number_And_Position_12To17>());
 	protocol_commands.emplace(CommandName::GET_TAGS_NUMBER_AND_POSITION_18TO23, std::make_unique<Get_Tags_Number_And_Position_18To23>());
+	protocol_commands.emplace(CommandName::GET_SINGLE_CONTAINER_PARAMETERS1_BY_POS, std::make_unique<Get_Single_Container_Parameters1_By_Pos>());
 
 	QObject::connect(sp.get(), &SerialPort_ReaderWriter::dataRead,
 					 this, &Protocol_MasterSlave::serialDataHandler,

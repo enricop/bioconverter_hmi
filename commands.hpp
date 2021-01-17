@@ -8,6 +8,8 @@
 
 #include <qqml.h>
 
+#include <QQmlListProperty>
+
 namespace bioconverter {
 
 class Command
@@ -382,7 +384,112 @@ private:
 	int pos23;
 };
 
+class Container_Parameters1 : public QObject
+{
+	Q_OBJECT
 
+	QML_NAMED_ELEMENT(Container_Parameters1)
+	QML_UNCREATABLE("Container_Parameters1 is always a named property of Get_Signle_Container_Parameters1_By_Pos")
+
+//TODO: use enums instead
+	Q_PROPERTY(int status READ getStatus NOTIFY statusChanged)
+	Q_PROPERTY(int foodtype READ getFoodtype NOTIFY foodtypeChanged)
+	Q_PROPERTY(int foodquantity READ getFoodquantity NOTIFY foodquantityChanged)
+	Q_PROPERTY(QTime foodcycletime READ getFoodcycletime NOTIFY foodcycletimeChanged)
+	Q_PROPERTY(int foodnumberofcycles READ getFoodnumberofcycles NOTIFY foodnumberofcyclesChanged)
+
+public:
+	explicit Container_Parameters1(QObject *parent = nullptr) :
+		QObject(parent),
+		status{-1},
+		foodtype{-1},
+		foodquantity{-1},
+		foodcycletime(),
+		foodnumberofcycles{-1}
+	{}
+
+	void setStatus(int newstatus) {
+		if (newstatus != status) {
+			status = newstatus;
+			Q_EMIT statusChanged();
+		}
+	}
+	void setFoodtype(int newfoodtype) {
+		if (newfoodtype != foodtype) {
+			foodtype = newfoodtype;
+			Q_EMIT foodtypeChanged();
+		}
+	}
+	void setFoodquantity(int newfoodquantity) {
+		if (newfoodquantity != foodquantity) {
+			foodquantity = newfoodquantity;
+			Q_EMIT foodquantityChanged();
+		}
+	}
+	void setFoodcycletime(QTime newfoodcycletime) {
+		if (newfoodcycletime != foodcycletime) {
+			foodcycletime = newfoodcycletime;
+			Q_EMIT foodcycletimeChanged();
+		}
+	}
+	void setFoodnumberofcycles(int newfoodnumberofcycles) {
+		if (newfoodnumberofcycles != foodnumberofcycles) {
+			foodnumberofcycles = newfoodnumberofcycles;
+			Q_EMIT foodnumberofcyclesChanged();
+		}
+	}
+
+Q_SIGNALS:
+	void statusChanged();
+	void foodtypeChanged();
+	void foodquantityChanged();
+	void foodcycletimeChanged();
+	void foodnumberofcyclesChanged();
+
+private:
+	int getStatus() { return status; };
+	int getFoodtype() { return foodtype; };
+	int getFoodquantity() { return foodquantity; };
+	QTime getFoodcycletime() { return foodcycletime; };
+	int getFoodnumberofcycles() { return foodnumberofcycles; };
+
+	int status;
+	int foodtype;
+	int foodquantity;
+	QTime foodcycletime;
+	int foodnumberofcycles;
+};
+
+constexpr int NUMBER_OF_POSITIONS { 24 };
+
+class Get_Single_Container_Parameters1_By_Pos : public QObject,  public Command
+{
+	Q_OBJECT
+
+	QML_NAMED_ELEMENT(Get_Signle_Container_Parameters1_By_Pos)
+	QML_UNCREATABLE("Get_Signle_Container_Parameters1_By_Pos is always a named property of protocol")
+
+	Q_PROPERTY(QQmlListProperty<Container_Parameters1> containers READ getContainers)
+
+public:
+	explicit Get_Single_Container_Parameters1_By_Pos(QObject *parent = nullptr) :
+		QObject(parent)
+	{
+		for (unsigned int i = 0; i < NUMBER_OF_POSITIONS; i++) {
+			containers.push_back(new Container_Parameters1(this));
+		}
+	};
+
+	virtual int masterCommand(const QList<QVariant> &input, QByteArray &output) const override;
+	virtual int slaveResponse(const QByteArray &input, QList<QVariant> &output) override;
+
+private:
+	QQmlListProperty<Container_Parameters1> getContainers() {
+		return QQmlListProperty<Container_Parameters1>(this, &containers);
+	}
+
+	QList<Container_Parameters1 *> containers;
+};
 
 }
 

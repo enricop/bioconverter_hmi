@@ -55,26 +55,37 @@ ApplicationWindow {
             ListElement {
                 name: "GET_SYSTEM_INFO_1"
                 cmd: Protocol_MasterSlave.GET_SYSTEM_INFO_1
+                param: 0
             }
             ListElement {
                 name: "GET_SYSTEM_INFO_2"
                 cmd: Protocol_MasterSlave.GET_SYSTEM_INFO_2
+                param: 0
             }
             ListElement {
                 name: "GET_TAGS_NUMBER_AND_POSITION_0TO5"
                 cmd: Protocol_MasterSlave.GET_TAGS_NUMBER_AND_POSITION_0TO5
+                param: 0
             }
             ListElement {
                 name: "GET_TAGS_NUMBER_AND_POSITION_6TO11"
                 cmd: Protocol_MasterSlave.GET_TAGS_NUMBER_AND_POSITION_6TO11
+                param: 0
             }
             ListElement {
                 name: "GET_TAGS_NUMBER_AND_POSITION_12TO17"
                 cmd: Protocol_MasterSlave.GET_TAGS_NUMBER_AND_POSITION_12TO17
+                param: 0
             }
             ListElement {
                 name: "GET_TAGS_NUMBER_AND_POSITION_18TO23"
                 cmd: Protocol_MasterSlave.GET_TAGS_NUMBER_AND_POSITION_18TO23
+                param: 0
+            }
+            ListElement {
+                name: "GET_SINGLE_CONTAINER_PARAMETERS1_BY_POS"
+                cmd: Protocol_MasterSlave.GET_SINGLE_CONTAINER_PARAMETERS1_BY_POS
+                param: 2
             }
         }
 
@@ -94,7 +105,7 @@ ApplicationWindow {
                     width: listView.width
                     onClicked: {
                         cmd_timer.start();
-                        bio_backend.protocol.runCommand(cmd, []);
+                        bio_backend.protocol.runCommand(cmd, [param]);
                     }
                 }
             }
