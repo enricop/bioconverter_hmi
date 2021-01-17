@@ -64,6 +64,18 @@ ApplicationWindow {
                 name: "GET_TAGS_NUMBER_AND_POSITION_0TO5"
                 cmd: Protocol_MasterSlave.GET_TAGS_NUMBER_AND_POSITION_0TO5
             }
+            ListElement {
+                name: "GET_TAGS_NUMBER_AND_POSITION_6TO11"
+                cmd: Protocol_MasterSlave.GET_TAGS_NUMBER_AND_POSITION_6TO11
+            }
+            ListElement {
+                name: "GET_TAGS_NUMBER_AND_POSITION_12TO17"
+                cmd: Protocol_MasterSlave.GET_TAGS_NUMBER_AND_POSITION_12TO17
+            }
+            ListElement {
+                name: "GET_TAGS_NUMBER_AND_POSITION_18TO23"
+                cmd: Protocol_MasterSlave.GET_TAGS_NUMBER_AND_POSITION_18TO23
+            }
         }
 
         ScrollView {

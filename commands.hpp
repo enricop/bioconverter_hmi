@@ -223,6 +223,166 @@ private:
 	int pos5;
 };
 
+class Get_Tags_Number_And_Position_6To11 : public QObject,  public Command
+{
+	Q_OBJECT
+
+	QML_NAMED_ELEMENT(Get_Tags_Number_And_Position_6To11)
+	QML_UNCREATABLE("Get_Tags_Number_And_Position_6To11 is always a named property of protocol")
+
+	Q_PROPERTY(int pos6 READ getPos6   NOTIFY pos6Changed)
+	Q_PROPERTY(int pos7 READ getPos7   NOTIFY pos7Changed)
+	Q_PROPERTY(int pos8 READ getPos8   NOTIFY pos8Changed)
+	Q_PROPERTY(int pos9 READ getPos9   NOTIFY pos9Changed)
+	Q_PROPERTY(int pos10 READ getPos10 NOTIFY pos10Changed)
+	Q_PROPERTY(int pos11 READ getPos11 NOTIFY pos11Changed)
+
+public:
+	explicit Get_Tags_Number_And_Position_6To11(QObject *parent = nullptr) :
+		QObject(parent),
+		pos6 {-1},
+		pos7 {-1},
+		pos8 {-1},
+		pos9 {-1},
+		pos10{-1},
+		pos11{-1}
+	{};
+
+	virtual int masterCommand(const QList<QVariant> &input, QByteArray &output) const override;
+	virtual int slaveResponse(const QByteArray &input, QList<QVariant> &output) override;
+
+private:
+	int getPos6 () { return pos6 ; };
+	int getPos7 () { return pos7 ; };
+	int getPos8 () { return pos8 ; };
+	int getPos9 () { return pos9 ; };
+	int getPos10() { return pos10; };
+	int getPos11() { return pos11; };
+
+Q_SIGNALS:
+	void pos6Changed();
+	void pos7Changed();
+	void pos8Changed();
+	void pos9Changed();
+	void pos10Changed();
+	void pos11Changed();
+
+private:
+	int pos6 ;
+	int pos7 ;
+	int pos8 ;
+	int pos9 ;
+	int pos10;
+	int pos11;
+};
+
+class Get_Tags_Number_And_Position_12To17 : public QObject,  public Command
+{
+	Q_OBJECT
+
+	QML_NAMED_ELEMENT(Get_Tags_Number_And_Position_12To17)
+	QML_UNCREATABLE("Get_Tags_Number_And_Position_12To17 is always a named property of protocol")
+
+	Q_PROPERTY(int pos12 READ getPos12 NOTIFY pos12Changed)
+	Q_PROPERTY(int pos13 READ getPos13 NOTIFY pos13Changed)
+	Q_PROPERTY(int pos14 READ getPos14 NOTIFY pos14Changed)
+	Q_PROPERTY(int pos15 READ getPos15 NOTIFY pos15Changed)
+	Q_PROPERTY(int pos16 READ getPos16 NOTIFY pos16Changed)
+	Q_PROPERTY(int pos17 READ getPos17 NOTIFY pos17Changed)
+
+public:
+	explicit Get_Tags_Number_And_Position_12To17(QObject *parent = nullptr) :
+		QObject(parent),
+		pos12{-1},
+		pos13{-1},
+		pos14{-1},
+		pos15{-1},
+		pos16{-1},
+		pos17{-1}
+	{};
+
+	virtual int masterCommand(const QList<QVariant> &input, QByteArray &output) const override;
+	virtual int slaveResponse(const QByteArray &input, QList<QVariant> &output) override;
+
+private:
+	int getPos12() { return pos12; };
+	int getPos13() { return pos13; };
+	int getPos14() { return pos14; };
+	int getPos15() { return pos15; };
+	int getPos16() { return pos16; };
+	int getPos17() { return pos17; };
+
+Q_SIGNALS:
+	void pos12Changed();
+	void pos13Changed();
+	void pos14Changed();
+	void pos15Changed();
+	void pos16Changed();
+	void pos17Changed();
+
+private:
+	int pos12;
+	int pos13;
+	int pos14;
+	int pos15;
+	int pos16;
+	int pos17;
+};
+
+class Get_Tags_Number_And_Position_18To23 : public QObject,  public Command
+{
+	Q_OBJECT
+
+	QML_NAMED_ELEMENT(Get_Tags_Number_And_Position_18To23)
+	QML_UNCREATABLE("Get_Tags_Number_And_Position_18To23 is always a named property of protocol")
+
+	Q_PROPERTY(int pos18 READ getPos18 NOTIFY pos18Changed)
+	Q_PROPERTY(int pos19 READ getPos19 NOTIFY pos19Changed)
+	Q_PROPERTY(int pos20 READ getPos20 NOTIFY pos20Changed)
+	Q_PROPERTY(int pos21 READ getPos21 NOTIFY pos21Changed)
+	Q_PROPERTY(int pos22 READ getPos22 NOTIFY pos22Changed)
+	Q_PROPERTY(int pos23 READ getPos23 NOTIFY pos23Changed)
+
+public:
+	explicit Get_Tags_Number_And_Position_18To23(QObject *parent = nullptr) :
+		QObject(parent),
+		pos18{-1},
+		pos19{-1},
+		pos20{-1},
+		pos21{-1},
+		pos22{-1},
+		pos23{-1}
+	{};
+
+	virtual int masterCommand(const QList<QVariant> &input, QByteArray &output) const override;
+	virtual int slaveResponse(const QByteArray &input, QList<QVariant> &output) override;
+
+private:
+	int getPos18() { return pos18; };
+	int getPos19() { return pos19; };
+	int getPos20() { return pos20; };
+	int getPos21() { return pos21; };
+	int getPos22() { return pos22; };
+	int getPos23() { return pos23; };
+
+Q_SIGNALS:
+	void pos18Changed();
+	void pos19Changed();
+	void pos20Changed();
+	void pos21Changed();
+	void pos22Changed();
+	void pos23Changed();
+
+private:
+	int pos18;
+	int pos19;
+	int pos20;
+	int pos21;
+	int pos22;
+	int pos23;
+};
+
+
 
 }
 
