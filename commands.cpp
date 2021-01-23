@@ -41,7 +41,7 @@ int Get_System_Info_1::slaveResponse(const QByteArray &input, QList<QVariant> &o
 		functionInProgress = fu;
 		Q_EMIT functionInProgressChanged();
 	}
-	const auto e = static_cast<Error>(input.at(6));
+	const auto e = static_cast<SlaveError>(input.at(6));
 	if (e != errorOccured) {
 		errorOccured = e;
 		Q_EMIT errorOccuredChanged();
@@ -360,7 +360,199 @@ int Get_Single_Container_Parameters2_By_Pos::slaveResponse(const QByteArray &inp
 	return 0;
 }
 
+int Try_To_Insert_New_Container::masterCommand(const QList<QVariant> &input, QByteArray &output) const
+{
+	Q_UNUSED(input);
 
+	output.append(7, 0x0);
 
+	return 0;
+}
+
+int Try_To_Insert_New_Container::slaveResponse(const QByteArray &input, QList<QVariant> &output)
+{
+	if (input.size() != 7)
+		return -1;
+
+	for (const auto b : input) {
+		if (b != 0x0)
+			return -1;
+	}
+
+	output = {};
+	return 0;
+}
+
+int Set_Single_Container_Parameters::masterCommand(const QList<QVariant> &input, QByteArray &output) const
+{
+	if (input.size() != 5)
+		return -1;
+
+	output.append(1, 0x0);
+
+	for (const auto &in : input) {
+		bool ok = false;
+		output.append(1, in.toInt(&ok));
+		if (!ok)
+			return -2;
+	}
+
+	output.append(1, 0x0);
+	return 0;
+}
+
+int Set_Single_Container_Parameters::slaveResponse(const QByteArray &input, QList<QVariant> &output)
+{
+	if (input.size() != 7)
+		return -1;
+
+	const auto tag = static_cast<int>(input.at(0));
+	if (tag < TAG_MIN || tag > TAG_MAX) {
+		return -2;
+	}
+
+	newtag = tag;
+	Q_EMIT newtagChanged();
+
+	output = { newtag };
+	return 0;
+}
+
+int Erase_EEPROM_Reset_System::masterCommand(const QList<QVariant> &input, QByteArray &output) const
+{
+	Q_UNUSED(input);
+
+	output.append(7, 0x0);
+
+	return 0;
+}
+
+int Erase_EEPROM_Reset_System::slaveResponse(const QByteArray &input, QList<QVariant> &output)
+{
+	if (input.size() != 7)
+		return -1;
+
+	for (const auto b : input) {
+		if (b != 0x0)
+			return -1;
+	}
+
+	output = {};
+	return 0;
+}
+
+int Try_To_Show_Container::masterCommand(const QList<QVariant> &input, QByteArray &output) const
+{
+	if (input.size() != 1)
+		return -1;
+
+	bool ok = false;
+	const auto tag = input.at(0).toInt(&ok);
+	if (tag < TAG_MIN || tag > TAG_MAX) {
+		return -2;
+	}
+	output.append(1, tag);
+
+	output.append(6, 0x0);
+	return 0;
+}
+
+int Try_To_Show_Container::slaveResponse(const QByteArray &input, QList<QVariant> &output)
+{
+	if (input.size() != 7)
+		return -1;
+
+	const auto tag = static_cast<int>(input.at(0));
+	if (tag < TAG_MIN || tag > TAG_MAX) {
+		return -2;
+	}
+
+	output = { tag };
+	return 0;
+}
+
+int Show_Container_Go_Back::masterCommand(const QList<QVariant> &input, QByteArray &output) const
+{
+	Q_UNUSED(input);
+
+	output.append(7, 0x0);
+
+	return 0;
+}
+
+int Show_Container_Go_Back::slaveResponse(const QByteArray &input, QList<QVariant> &output)
+{
+	if (input.size() != 7)
+		return -1;
+
+	output = {};
+	return 0;
+}
+
+int Manage_Error::masterCommand(const QList<QVariant> &input, QByteArray &output) const
+{
+	Q_UNUSED(input);
+
+	output.append(7, 0x0);
+
+	return 0;
+}
+
+int Manage_Error::slaveResponse(const QByteArray &input, QList<QVariant> &output)
+{
+	if (input.size() != 7)
+		return -1;
+
+	output = {};
+	return 0;
+}
+
+int Delete_All_Errors::masterCommand(const QList<QVariant> &input, QByteArray &output) const
+{
+	Q_UNUSED(input);
+
+	output.append(7, 0x0);
+
+	return 0;
+}
+
+int Delete_All_Errors::slaveResponse(const QByteArray &input, QList<QVariant> &output)
+{
+	if (input.size() != 7)
+		return -1;
+
+	output = {};
+	return 0;
+}
+
+int Cancel_Container_By_Tag::masterCommand(const QList<QVariant> &input, QByteArray &output) const
+{
+	if (input.size() != 1)
+		return -1;
+
+	bool ok = false;
+	const auto tag = input.at(0).toInt(&ok);
+	if (tag < TAG_MIN || tag > TAG_MAX) {
+		return -2;
+	}
+	output.append(1, tag);
+
+	output.append(6, 0x0);
+	return 0;
+}
+
+int Cancel_Container_By_Tag::slaveResponse(const QByteArray &input, QList<QVariant> &output)
+{
+	if (input.size() != 7)
+		return -1;
+
+	const auto tag = static_cast<int>(input.at(0));
+	if (tag < TAG_MIN || tag > TAG_MAX) {
+		return -2;
+	}
+
+	output = { tag };
+	return 0;
+}
 
 }

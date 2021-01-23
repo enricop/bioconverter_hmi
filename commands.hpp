@@ -14,6 +14,10 @@
 
 namespace bioconverter {
 
+constexpr int NUMBER_OF_POSITIONS { 24 };
+constexpr int TAG_MIN { 101 };
+constexpr int TAG_MAX { TAG_MIN + NUMBER_OF_POSITIONS };
+
 class Command
 {
 public:
@@ -36,7 +40,7 @@ class Get_System_Info_1 : public QObject,  public Command
 	Q_PROPERTY(FoodAvailable foodAvailable READ getFoodAvailable NOTIFY foodAvailableChanged)
 	Q_PROPERTY(int positionToProcess READ getPositionToProcess NOTIFY positionToProcessChanged)
 	Q_PROPERTY(Function functionInProgress READ getFunctionInProgress NOTIFY functionInProgressChanged)
-	Q_PROPERTY(Error errorOccured READ getErrorOccured NOTIFY errorOccuredChanged)
+	Q_PROPERTY(SlaveError errorOccured READ getErrorOccured NOTIFY errorOccuredChanged)
 
 public:
 	explicit Get_System_Info_1(QObject *parent = nullptr) :
@@ -108,7 +112,7 @@ private:
 	FoodAvailable getFoodAvailable() { return foodAvailable; };
 	unsigned int getPositionToProcess() { return positionToProcess; };
 	Function getFunctionInProgress() { return functionInProgress; };
-	Error getErrorOccured() { return errorOccured; };
+	SlaveError getErrorOccured() { return errorOccured; };
 
 Q_SIGNALS:
 	void statusChanged();
@@ -124,7 +128,7 @@ private:
 	FoodAvailable foodAvailable;
 	int positionToProcess;
 	Function functionInProgress;
-	Error errorOccured;
+	SlaveError errorOccured;
 };
 
 
@@ -450,8 +454,6 @@ private:
 	int foodcycles;
 };
 
-constexpr int NUMBER_OF_POSITIONS { 24 };
-
 class Get_Single_Container_Parameters1_By_Pos : public QObject,  public Command
 {
 	Q_OBJECT
@@ -534,8 +536,8 @@ class Get_Single_Container_Parameters2_By_Pos : public QObject,  public Command
 {
 	Q_OBJECT
 
-	QML_NAMED_ELEMENT(Get_Signle_Container_Parameters1_By_Pos)
-	QML_UNCREATABLE("Get_Signle_Container_Parameters1_By_Pos is always a named property of protocol")
+	QML_NAMED_ELEMENT(Get_Single_Container_Parameters2_By_Pos)
+	QML_UNCREATABLE("Get_Single_Container_Parameters2_By_Pos is always a named property of protocol")
 
 	Q_PROPERTY(QQmlListProperty<Container_Parameters2> containers READ getContainers)
 
@@ -558,6 +560,97 @@ private:
 
 	QList<Container_Parameters2 *> containers;
 };
+
+class Try_To_Insert_New_Container : public Command
+{
+public:
+	explicit Try_To_Insert_New_Container() { }
+
+	virtual int masterCommand(const QList<QVariant> &input, QByteArray &output) const override;
+	virtual int slaveResponse(const QByteArray &input, QList<QVariant> &output) override;
+};
+
+class Set_Single_Container_Parameters : public QObject,  public Command
+{
+	Q_OBJECT
+
+	QML_NAMED_ELEMENT(Set_Single_Container_Parameters)
+	QML_UNCREATABLE("Set_Single_Container_Parameters is always a named property of protocol")
+
+	Q_PROPERTY(int newtag READ getNewtag NOTIFY newtagChanged)
+
+public:
+	explicit Set_Single_Container_Parameters(QObject *parent = nullptr) :
+		QObject(parent),
+		newtag{-1}
+	{ }
+
+	virtual int masterCommand(const QList<QVariant> &input, QByteArray &output) const override;
+	virtual int slaveResponse(const QByteArray &input, QList<QVariant> &output) override;
+
+Q_SIGNALS:
+	void newtagChanged();
+
+private:
+	int getNewtag() { return newtag; }
+
+	int newtag;
+};
+
+class Erase_EEPROM_Reset_System : public Command
+{
+public:
+	explicit Erase_EEPROM_Reset_System() { }
+
+	virtual int masterCommand(const QList<QVariant> &input, QByteArray &output) const override;
+	virtual int slaveResponse(const QByteArray &input, QList<QVariant> &output) override;
+};
+
+class Try_To_Show_Container : public Command
+{
+public:
+	explicit Try_To_Show_Container() { }
+
+	virtual int masterCommand(const QList<QVariant> &input, QByteArray &output) const override;
+	virtual int slaveResponse(const QByteArray &input, QList<QVariant> &output) override;
+};
+
+class Show_Container_Go_Back : public Command
+{
+public:
+	explicit Show_Container_Go_Back() { }
+
+	virtual int masterCommand(const QList<QVariant> &input, QByteArray &output) const override;
+	virtual int slaveResponse(const QByteArray &input, QList<QVariant> &output) override;
+};
+
+class Manage_Error : public Command
+{
+public:
+	explicit Manage_Error() { }
+
+	virtual int masterCommand(const QList<QVariant> &input, QByteArray &output) const override;
+	virtual int slaveResponse(const QByteArray &input, QList<QVariant> &output) override;
+};
+
+class Delete_All_Errors : public Command
+{
+public:
+	explicit Delete_All_Errors() { }
+
+	virtual int masterCommand(const QList<QVariant> &input, QByteArray &output) const override;
+	virtual int slaveResponse(const QByteArray &input, QList<QVariant> &output) override;
+};
+
+class Cancel_Container_By_Tag : public Command
+{
+public:
+	explicit Cancel_Container_By_Tag() { }
+
+	virtual int masterCommand(const QList<QVariant> &input, QByteArray &output) const override;
+	virtual int slaveResponse(const QByteArray &input, QList<QVariant> &output) override;
+};
+
 
 
 }

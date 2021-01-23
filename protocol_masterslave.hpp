@@ -50,9 +50,14 @@ public:
 		GET_TAGS_NUMBER_AND_POSITION_18TO23 = 0x0B,
 		GET_SINGLE_CONTAINER_PARAMETERS1_BY_POS = 0x0C,
 		GET_SINGLE_CONTAINER_PARAMETERS2_BY_POS = 0x0D,
-		TRY_TO_INSERT_NEW_CONTAINER = 0x64,
 		SET_SINGLE_CONTAINER_PARAMETERS1 = 0x32,
-		ERASE_EEPROM_RESET_SYSTEM = 0x51
+		CMD_CANCEL_CONTAINER_BY_TAG = 0x50,
+		ERASE_EEPROM_RESET_SYSTEM = 0x51,
+		TRY_TO_INSERT_NEW_CONTAINER = 0x64,
+		TRY_TO_SHOW_CONTAINER = 0x65,
+		SHOW_CONTAINER_GO_BACK = 0x66,
+		MANAGE_ERROR = 0x67,
+		DELETE_ALL_ERRORS = 0x68,
 	};
 	Q_ENUM(CommandName)
 
@@ -90,7 +95,7 @@ private Q_SLOTS:
 	void serialErrorHandler(int error);
 
 Q_SIGNALS:
-	void commandResult(const QVariant cmd, const int result, const QVariantList proto_output, const enum Error proto_error);
+	void commandResult(const QVariant cmd, const int master_error, const QVariantList proto_output, const enum SlaveError slave_error);
 
 	void protocolOutputChanged();
 

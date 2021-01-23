@@ -7,7 +7,7 @@ namespace bioconverter {
 
 Q_NAMESPACE
 
-enum class Error {
+enum class SlaveError {
 	NO_ERROR          = 0,
 	ERROR_GENERIC,
 	HOME_ERROR_Z,
@@ -22,7 +22,7 @@ enum class Error {
 	ERR_ATT_CONTAINER_IS_IN_PROCESS       = 54,
 	ERR_ATT_FALSE_EVENT_FROM_TERMINAL     = 55,
 };
-Q_ENUM_NS(Error);
+Q_ENUM_NS(SlaveError);
 
 }
 
