@@ -21,6 +21,15 @@ Protocol_MasterSlave::Protocol_MasterSlave(const std::shared_ptr<SerialPort_Read
 	protocol_commands.emplace(CommandName::GET_TAGS_NUMBER_AND_POSITION_12TO17, std::make_unique<Get_Tags_Number_And_Position_12To17>());
 	protocol_commands.emplace(CommandName::GET_TAGS_NUMBER_AND_POSITION_18TO23, std::make_unique<Get_Tags_Number_And_Position_18To23>());
 	protocol_commands.emplace(CommandName::GET_SINGLE_CONTAINER_PARAMETERS1_BY_POS, std::make_unique<Get_Single_Container_Parameters1_By_Pos>());
+	protocol_commands.emplace(CommandName::GET_SINGLE_CONTAINER_PARAMETERS2_BY_POS, std::make_unique<Get_Single_Container_Parameters2_By_Pos>());
+	protocol_commands.emplace(CommandName::SET_SINGLE_CONTAINER_PARAMETERS1, std::make_unique<Set_Single_Container_Parameters>());
+	protocol_commands.emplace(CommandName::CANCEL_CONTAINER_BY_TAG, std::make_unique<Cancel_Container_By_Tag>());
+	protocol_commands.emplace(CommandName::ERASE_EEPROM_RESET_SYSTEM, std::make_unique<Erase_EEPROM_Reset_System>());
+	protocol_commands.emplace(CommandName::TRY_TO_INSERT_NEW_CONTAINER, std::make_unique<Try_To_Insert_New_Container>());
+	protocol_commands.emplace(CommandName::TRY_TO_SHOW_CONTAINER, std::make_unique<Try_To_Show_Container>());
+	protocol_commands.emplace(CommandName::SHOW_CONTAINER_GO_BACK, std::make_unique<Show_Container_Go_Back>());
+	protocol_commands.emplace(CommandName::MANAGE_ERROR, std::make_unique<Manage_Error>());
+	protocol_commands.emplace(CommandName::DELETE_ALL_ERRORS, std::make_unique<Delete_All_Errors>());
 
 	QObject::connect(sp.get(), &SerialPort_ReaderWriter::dataRead,
 					 this, &Protocol_MasterSlave::serialDataHandler,
@@ -44,14 +53,14 @@ void Protocol_MasterSlave::runCommand(const Protocol_MasterSlave::CommandName cm
 	if (current_command != CommandName::INVALID) {
 		m_protocolOutput << "The system is currently executing another command :" << metaEnum.valueToKey(static_cast<int>(current_command)) << "\n";
 		Q_EMIT protocolOutputChanged();
-		Q_EMIT commandResult(QVariant::fromValue(cmd), -9, output, SlaveError::NO_ERROR);
+		Q_EMIT commandResult(QVariant::fromValue(cmd), -9, output, QVariant::fromValue(SlaveError::NO_ERROR));
 		return;
 	}
 
 	if (!protocol_commands.count(cmd)) {
 		m_protocolOutput << "Unsupported command: " << static_cast<unsigned int>(cmd) << "\n";
 		Q_EMIT protocolOutputChanged();
-		Q_EMIT commandResult(QVariant::fromValue(cmd), -1, output, SlaveError::NO_ERROR);
+		Q_EMIT commandResult(QVariant::fromValue(cmd), -1, output, QVariant::fromValue(SlaveError::NO_ERROR));
 		return;
 	}
 
@@ -63,7 +72,7 @@ void Protocol_MasterSlave::runCommand(const Protocol_MasterSlave::CommandName cm
 	if (ret_master || bytesToBeWriteen.size() != 9) {
 		m_protocolOutput << "Invalid input data for master command: " << metaEnum.valueToKey(static_cast<int>(cmd)) << "\n";
 		Q_EMIT protocolOutputChanged();
-		Q_EMIT commandResult(QVariant::fromValue(cmd), -2, output, SlaveError::NO_ERROR);
+		Q_EMIT commandResult(QVariant::fromValue(cmd), -2, output, QVariant::fromValue(SlaveError::NO_ERROR));
 		return;
 	}
 
@@ -77,7 +86,7 @@ void Protocol_MasterSlave::runCommand(const Protocol_MasterSlave::CommandName cm
 	if (nbytesWritten != bytesToBeWriteen.size()) {
 		m_protocolOutput << "Failed writing master command: " << metaEnum.valueToKey(static_cast<int>(cmd)) << "\n";
 		Q_EMIT protocolOutputChanged();
-		Q_EMIT commandResult(QVariant::fromValue(cmd), -3, output, SlaveError::NO_ERROR);
+		Q_EMIT commandResult(QVariant::fromValue(cmd), -3, output, QVariant::fromValue(SlaveError::NO_ERROR));
 		return;
 	}
 
@@ -91,7 +100,7 @@ void Protocol_MasterSlave::serialDataHandler(const QByteArray dataRead)
 	if (!protocol_commands.count(current_command)) {
 		m_protocolOutput << "Invalid current command type: " << static_cast<unsigned int>(current_command) << "\n";
 		Q_EMIT protocolOutputChanged();
-		Q_EMIT commandResult(QVariant::fromValue(current_command), -4, output, SlaveError::NO_ERROR);
+		Q_EMIT commandResult(QVariant::fromValue(current_command), -4, output, QVariant::fromValue(SlaveError::NO_ERROR));
 		current_command = CommandName::INVALID;
 		return;
 	}
@@ -105,7 +114,7 @@ void Protocol_MasterSlave::serialDataHandler(const QByteArray dataRead)
 	{
 		m_protocolOutput << "Invalid header data received for command: " << cmdEnum.valueToKey(static_cast<int>(current_command)) << "\n";
 		Q_EMIT protocolOutputChanged();
-		Q_EMIT commandResult(QVariant::fromValue(current_command), -6, output, SlaveError::NO_ERROR);
+		Q_EMIT commandResult(QVariant::fromValue(current_command), -6, output, QVariant::fromValue(SlaveError::NO_ERROR));
 		current_command = CommandName::INVALID;
 		return;
 	}
@@ -115,7 +124,7 @@ void Protocol_MasterSlave::serialDataHandler(const QByteArray dataRead)
 		m_protocolOutput << "Received protocol error " << errorEnum.valueToKey(static_cast<int>(dataRead.at(2)))
 						 << " from slave for command: " << cmdEnum.valueToKey(static_cast<int>(current_command)) << "\n";
 		Q_EMIT protocolOutputChanged();
-		Q_EMIT commandResult(QVariant::fromValue(current_command), 0, output, static_cast<SlaveError>(dataRead.at(2)));
+		Q_EMIT commandResult(QVariant::fromValue(current_command), 0, output, QVariant::fromValue(static_cast<SlaveError>(dataRead.at(2))));
 		current_command = CommandName::INVALID;
 		return;
 	}
@@ -128,7 +137,7 @@ void Protocol_MasterSlave::serialDataHandler(const QByteArray dataRead)
 	if (dataRead.at(9) != checksum) {
 		m_protocolOutput << "Invalid checksum data received for command: " << cmdEnum.valueToKey(static_cast<int>(current_command)) << "\n";
 		Q_EMIT protocolOutputChanged();
-		Q_EMIT commandResult(QVariant::fromValue(current_command), -7, output, SlaveError::NO_ERROR);
+		Q_EMIT commandResult(QVariant::fromValue(current_command), -7, output, QVariant::fromValue(SlaveError::NO_ERROR));
 		current_command = CommandName::INVALID;
 		return;
 	}
@@ -138,12 +147,12 @@ void Protocol_MasterSlave::serialDataHandler(const QByteArray dataRead)
 	if (ret_slave) {
 		m_protocolOutput << "Cannot parse input bytes from slave response of command: " << cmdEnum.valueToKey(static_cast<int>(current_command)) << "\n";
 		Q_EMIT protocolOutputChanged();
-		Q_EMIT commandResult(QVariant::fromValue(current_command), -8, output, SlaveError::NO_ERROR);
+		Q_EMIT commandResult(QVariant::fromValue(current_command), -8, output, QVariant::fromValue(SlaveError::NO_ERROR));
 		current_command = CommandName::INVALID;
 		return;
 	}
 
-	Q_EMIT commandResult(QVariant::fromValue(current_command), 0, output, SlaveError::NO_ERROR);
+	Q_EMIT commandResult(QVariant::fromValue(current_command), 0, output, QVariant::fromValue(SlaveError::NO_ERROR));
 	current_command = CommandName::INVALID;
 }
 
@@ -151,7 +160,7 @@ void Protocol_MasterSlave::serialErrorHandler(int error)
 {
 	m_protocolOutput << "Serial port error: " << error << "\n";
 	Q_EMIT protocolOutputChanged();
-	Q_EMIT commandResult(QVariant::fromValue(current_command), -10, QVariantList(), SlaveError::NO_ERROR);
+	Q_EMIT commandResult(QVariant::fromValue(current_command), -10, QVariantList(), QVariant::fromValue(SlaveError::NO_ERROR));
 	current_command = CommandName::INVALID;
 }
 

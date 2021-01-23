@@ -33,6 +33,8 @@ class Protocol_MasterSlave : public QObject
 	Q_PROPERTY(bioconverter::Get_Tags_Number_And_Position_12To17* tags3 READ tags3 CONSTANT)
 	Q_PROPERTY(bioconverter::Get_Tags_Number_And_Position_18To23* tags4 READ tags4 CONSTANT)
 	Q_PROPERTY(bioconverter::Get_Single_Container_Parameters1_By_Pos* contp1 READ contp1 CONSTANT)
+	Q_PROPERTY(bioconverter::Get_Single_Container_Parameters2_By_Pos* contp2 READ contp2 CONSTANT)
+	Q_PROPERTY(bioconverter::Set_Single_Container_Parameters* setp READ setp CONSTANT)
 
 public:
 	explicit Protocol_MasterSlave(const std::shared_ptr<SerialPort_ReaderWriter> sp,
@@ -51,7 +53,7 @@ public:
 		GET_SINGLE_CONTAINER_PARAMETERS1_BY_POS = 0x0C,
 		GET_SINGLE_CONTAINER_PARAMETERS2_BY_POS = 0x0D,
 		SET_SINGLE_CONTAINER_PARAMETERS1 = 0x32,
-		CMD_CANCEL_CONTAINER_BY_TAG = 0x50,
+		CANCEL_CONTAINER_BY_TAG = 0x50,
 		ERASE_EEPROM_RESET_SYSTEM = 0x51,
 		TRY_TO_INSERT_NEW_CONTAINER = 0x64,
 		TRY_TO_SHOW_CONTAINER = 0x65,
@@ -85,7 +87,12 @@ public:
 	Get_Single_Container_Parameters1_By_Pos* contp1() {
 		return static_cast<Get_Single_Container_Parameters1_By_Pos*>(protocol_commands.at(CommandName::GET_SINGLE_CONTAINER_PARAMETERS1_BY_POS).get());
 	};
-
+	Get_Single_Container_Parameters2_By_Pos* contp2() {
+		return static_cast<Get_Single_Container_Parameters2_By_Pos*>(protocol_commands.at(CommandName::GET_SINGLE_CONTAINER_PARAMETERS2_BY_POS).get());
+	};
+	Set_Single_Container_Parameters* setp() {
+		return static_cast<Set_Single_Container_Parameters*>(protocol_commands.at(CommandName::SET_SINGLE_CONTAINER_PARAMETERS1).get());
+	};
 
 public Q_SLOTS:
 	void runCommand(const enum CommandName cmd, const QList<QVariant> &input);
@@ -95,7 +102,7 @@ private Q_SLOTS:
 	void serialErrorHandler(int error);
 
 Q_SIGNALS:
-	void commandResult(const QVariant cmd, const int master_error, const QVariantList proto_output, const enum SlaveError slave_error);
+	void commandResult(const QVariant cmd, const int master_error, const QVariantList proto_output, const QVariant slave_error);
 
 	void protocolOutputChanged();
 
