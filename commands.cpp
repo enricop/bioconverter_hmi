@@ -286,9 +286,15 @@ int Get_Tags_Number_And_Position_18To23::slaveResponse(const QByteArray &input, 
 
 int Get_Single_Container_Parameters1_By_Pos::masterCommand(const QList<QVariant> &input, QByteArray &output) const
 {
-	const auto pos = input.at(0).toInt();
-	if (pos < 0 || pos >= NUMBER_OF_POSITIONS) {
+	if (input.size() != 1) {
 		return -1;
+	}
+
+	bool ok = false;
+	const auto pos = input.at(0).toInt(&ok);
+
+	if (!ok || pos < 0 || pos >= NUMBER_OF_POSITIONS) {
+		return -2;
 	}
 
 	output.append(pos);
@@ -326,9 +332,15 @@ int Get_Single_Container_Parameters1_By_Pos::slaveResponse(const QByteArray &inp
 
 int Get_Single_Container_Parameters2_By_Pos::masterCommand(const QList<QVariant> &input, QByteArray &output) const
 {
-	const auto pos = input.at(0).toInt();
-	if (pos < 0 || pos >= NUMBER_OF_POSITIONS) {
+	if (input.size() != 1) {
 		return -1;
+	}
+
+	bool ok = false;
+	const auto pos = input.at(0).toInt(&ok);
+
+	if (!ok || pos < 0 || pos >= NUMBER_OF_POSITIONS) {
+		return -2;
 	}
 
 	output.append(pos);

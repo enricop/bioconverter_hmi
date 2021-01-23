@@ -119,16 +119,6 @@ void Protocol_MasterSlave::serialDataHandler(const QByteArray dataRead)
 		return;
 	}
 
-	if (static_cast<std::uint8_t>(dataRead.at(1)) == 0xFF) {
-		QMetaEnum errorEnum = QMetaEnum::fromType<SlaveError>();
-		m_protocolOutput << "Received protocol error " << errorEnum.valueToKey(static_cast<int>(dataRead.at(2)))
-						 << " from slave for command: " << cmdEnum.valueToKey(static_cast<int>(current_command)) << "\n";
-		Q_EMIT protocolOutputChanged();
-		Q_EMIT commandResult(QVariant::fromValue(current_command), 0, output, QVariant::fromValue(static_cast<SlaveError>(dataRead.at(2))));
-		current_command = CommandName::INVALID;
-		return;
-	}
-
 	QByteArray bytesRead = dataRead.left(9);
 	std::uint8_t checksum = 0;
 	for (const auto b : qAsConst(bytesRead)) {
@@ -138,6 +128,16 @@ void Protocol_MasterSlave::serialDataHandler(const QByteArray dataRead)
 		m_protocolOutput << "Invalid checksum data received for command: " << cmdEnum.valueToKey(static_cast<int>(current_command)) << "\n";
 		Q_EMIT protocolOutputChanged();
 		Q_EMIT commandResult(QVariant::fromValue(current_command), -7, output, QVariant::fromValue(SlaveError::NO_ERROR));
+		current_command = CommandName::INVALID;
+		return;
+	}
+
+	if (static_cast<std::uint8_t>(dataRead.at(1)) == 0xFF) {
+		QMetaEnum errorEnum = QMetaEnum::fromType<SlaveError>();
+		m_protocolOutput << "Received protocol error " << errorEnum.valueToKey(static_cast<int>(dataRead.at(2)))
+						 << " from slave for command: " << cmdEnum.valueToKey(static_cast<int>(current_command)) << "\n";
+		Q_EMIT protocolOutputChanged();
+		Q_EMIT commandResult(QVariant::fromValue(current_command), 0, output, QVariant::fromValue(static_cast<SlaveError>(dataRead.at(2))));
 		current_command = CommandName::INVALID;
 		return;
 	}
