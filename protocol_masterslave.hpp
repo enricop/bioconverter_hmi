@@ -9,6 +9,7 @@
 #include <memory>
 
 #include <commands.hpp>
+#include <protocol_error.hpp>
 
 namespace bioconverter {
 
@@ -53,7 +54,6 @@ public:
 		SET_SINGLE_CONTAINER_PARAMETERS1 = 0x32,
 		ERASE_EEPROM_RESET_SYSTEM = 0x51
 	};
-
 	Q_ENUM(CommandName)
 
 	QString getProtocolOutput() {
@@ -90,7 +90,7 @@ private Q_SLOTS:
 	void serialErrorHandler(int error);
 
 Q_SIGNALS:
-	void commandResult(const QVariant cmd, const int result, const QVariantList output);
+	void commandResult(const QVariant cmd, const int result, const QVariantList proto_output, const enum Error proto_error);
 
 	void protocolOutputChanged();
 

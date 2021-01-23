@@ -10,6 +10,8 @@
 
 #include <QQmlListProperty>
 
+#include <protocol_error.hpp>
+
 namespace bioconverter {
 
 class Command
@@ -96,24 +98,6 @@ public:
 		FUNCTION_SET_POSITION_NASTRINO_ASCENSORE            = 0x01, //functionInProgress_L  Low bits
 	};
 	Q_ENUM(Function);
-
-	enum class Error {
-	  NO_ERROR          = 0,
-	  ERROR_GENERIC,
-	  HOME_ERROR_Z,
-	  HOME_NO_ERROR_Z,
-	  CHECKSUM_ERR,
-	  INDEX_NOT_VALID,
-
-	  //...
-	  ERR_ATT_FOOD_NOT_AVAILABLE			= 50,
-	  ERR_ATT_AUTO_TASK_RUNNING				= 51,
-	  ERR_ATT_NO_CONTAINER_ON_FOOD_PLATFORM = 52,
-	  ERR_ATT_INDEX_OVERRUN                 = 53,
-	  ERR_ATT_CONTAINER_IS_IN_PROCESS       = 54,
-	  ERR_ATT_FALSE_EVENT_FROM_TERMINAL     = 55,
-	};
-	Q_ENUM(Error);
 
 	virtual int masterCommand(const QList<QVariant> &input, QByteArray &output) const override;
 	virtual int slaveResponse(const QByteArray &input, QList<QVariant> &output) override;
@@ -389,26 +373,32 @@ class Container_Parameters1 : public QObject
 	Q_OBJECT
 
 	QML_NAMED_ELEMENT(Container_Parameters1)
-	QML_UNCREATABLE("Container_Parameters1 is always a named property of Get_Signle_Container_Parameters1_By_Pos")
+	QML_UNCREATABLE("Container_Parameters1 is always a named property of Get_Single_Container_Parameters1_By_Pos")
 
-//TODO: use enums instead
-	Q_PROPERTY(int status READ getStatus NOTIFY statusChanged)
+	Q_PROPERTY(Status status READ getStatus NOTIFY statusChanged)
 	Q_PROPERTY(int foodtype READ getFoodtype NOTIFY foodtypeChanged)
 	Q_PROPERTY(int foodquantity READ getFoodquantity NOTIFY foodquantityChanged)
 	Q_PROPERTY(QTime foodcycletime READ getFoodcycletime NOTIFY foodcycletimeChanged)
-	Q_PROPERTY(int foodnumberofcycles READ getFoodnumberofcycles NOTIFY foodnumberofcyclesChanged)
+	Q_PROPERTY(int foodcycles READ getFoodcycles NOTIFY foodcyclesChanged)
 
 public:
 	explicit Container_Parameters1(QObject *parent = nullptr) :
 		QObject(parent),
-		status{-1},
+		status{Status::NOT_INSERTED},
 		foodtype{-1},
 		foodquantity{-1},
 		foodcycletime(),
-		foodnumberofcycles{-1}
+		foodcycles{-1}
 	{}
 
-	void setStatus(int newstatus) {
+	enum class Status {
+		NOT_INSERTED = 0,
+		INSERTED = 1,
+		MOVING = 2
+	};
+	Q_ENUM(Status)
+
+	void setStatus(Status newstatus) {
 		if (newstatus != status) {
 			status = newstatus;
 			Q_EMIT statusChanged();
@@ -432,10 +422,10 @@ public:
 			Q_EMIT foodcycletimeChanged();
 		}
 	}
-	void setFoodnumberofcycles(int newfoodnumberofcycles) {
-		if (newfoodnumberofcycles != foodnumberofcycles) {
-			foodnumberofcycles = newfoodnumberofcycles;
-			Q_EMIT foodnumberofcyclesChanged();
+	void setFoodcycles(int newfoodnumberofcycles) {
+		if (newfoodnumberofcycles != foodcycles) {
+			foodcycles = newfoodnumberofcycles;
+			Q_EMIT foodcyclesChanged();
 		}
 	}
 
@@ -444,20 +434,20 @@ Q_SIGNALS:
 	void foodtypeChanged();
 	void foodquantityChanged();
 	void foodcycletimeChanged();
-	void foodnumberofcyclesChanged();
+	void foodcyclesChanged();
 
 private:
-	int getStatus() { return status; };
+	Status getStatus() { return status; };
 	int getFoodtype() { return foodtype; };
 	int getFoodquantity() { return foodquantity; };
 	QTime getFoodcycletime() { return foodcycletime; };
-	int getFoodnumberofcycles() { return foodnumberofcycles; };
+	int getFoodcycles() { return foodcycles; };
 
-	int status;
+	Status status;
 	int foodtype;
 	int foodquantity;
 	QTime foodcycletime;
-	int foodnumberofcycles;
+	int foodcycles;
 };
 
 constexpr int NUMBER_OF_POSITIONS { 24 };
@@ -490,6 +480,85 @@ private:
 
 	QList<Container_Parameters1 *> containers;
 };
+
+class Container_Parameters2 : public QObject
+{
+	Q_OBJECT
+
+	QML_NAMED_ELEMENT(Container_Parameters2)
+	QML_UNCREATABLE("Container_Parameters2 is always a named property of Get_Single_Container_Parameters2_By_Pos")
+
+	Q_PROPERTY(QTime remainingfoodcycletime READ getRemainingfoodcycletime NOTIFY remainingfoodcycletimeChanged)
+	Q_PROPERTY(int remainingfoodcycles READ getRemainingfoodcycles NOTIFY remainingfoodcyclesChanged)
+
+public:
+	explicit Container_Parameters2(QObject *parent = nullptr) :
+		QObject(parent),
+		remainingfoodcycletime(),
+		remainingfoodcycles{-1}
+	{}
+
+	enum class Status {
+		NOT_INSERTED = 0,
+		INSERTED = 1,
+		MOVING = 2
+	};
+	Q_ENUM(Status)
+
+	void setRemainingfoodcycletime(QTime newremainingfoodcycletime) {
+		if (newremainingfoodcycletime != remainingfoodcycletime) {
+			remainingfoodcycletime = newremainingfoodcycletime;
+			Q_EMIT remainingfoodcycletimeChanged();
+		}
+	}
+	void setRemainingfoodcycles(int newremainingfoodcycles) {
+		if (newremainingfoodcycles != remainingfoodcycles) {
+			remainingfoodcycles = newremainingfoodcycles;
+			Q_EMIT remainingfoodcyclesChanged();
+		}
+	}
+
+Q_SIGNALS:
+	void remainingfoodcycletimeChanged();
+	void remainingfoodcyclesChanged();
+
+private:
+	QTime getRemainingfoodcycletime() { return remainingfoodcycletime; };
+	int getRemainingfoodcycles() { return remainingfoodcycles; };
+
+	QTime remainingfoodcycletime;
+	int remainingfoodcycles;
+};
+
+class Get_Single_Container_Parameters2_By_Pos : public QObject,  public Command
+{
+	Q_OBJECT
+
+	QML_NAMED_ELEMENT(Get_Signle_Container_Parameters1_By_Pos)
+	QML_UNCREATABLE("Get_Signle_Container_Parameters1_By_Pos is always a named property of protocol")
+
+	Q_PROPERTY(QQmlListProperty<Container_Parameters2> containers READ getContainers)
+
+public:
+	explicit Get_Single_Container_Parameters2_By_Pos(QObject *parent = nullptr) :
+		QObject(parent)
+	{
+		for (unsigned int i = 0; i < NUMBER_OF_POSITIONS; i++) {
+			containers.push_back(new Container_Parameters2(this));
+		}
+	};
+
+	virtual int masterCommand(const QList<QVariant> &input, QByteArray &output) const override;
+	virtual int slaveResponse(const QByteArray &input, QList<QVariant> &output) override;
+
+private:
+	QQmlListProperty<Container_Parameters2> getContainers() {
+		return QQmlListProperty<Container_Parameters2>(this, &containers);
+	}
+
+	QList<Container_Parameters2 *> containers;
+};
+
 
 }
 

@@ -16,6 +16,7 @@ SOURCES += \
 HEADERS += \
     backend.hpp \
     commands.hpp \
+    protocol_error.hpp \
     protocol_masterslave.hpp \
 	serialport_readerwriter.hpp \
     serialworker_bridge.hpp

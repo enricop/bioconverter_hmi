@@ -307,18 +307,54 @@ int Get_Single_Container_Parameters1_By_Pos::slaveResponse(const QByteArray &inp
 		return -2;
 	}
 
-	containers.at(pos)->setStatus(static_cast<int>(input.at(1)));
+	containers.at(pos)->setStatus(static_cast<Container_Parameters1::Status>(input.at(1)));
 	containers.at(pos)->setFoodtype(static_cast<int>(input.at(2)));
 	containers.at(pos)->setFoodquantity(static_cast<int>(input.at(3)));
 	containers.at(pos)->setFoodcycletime(QTime(static_cast<int>(input.at(4)), 0));
-	containers.at(pos)->setFoodnumberofcycles(static_cast<int>(input.at(5)));
+	containers.at(pos)->setFoodcycles(static_cast<int>(input.at(5)));
 
 	output = {
-		static_cast<int>(input.at(1)),
+		QVariant::fromValue(static_cast<Container_Parameters1::Status>(input.at(1))),
 		static_cast<int>(input.at(2)),
 		static_cast<int>(input.at(3)),
 		QTime(static_cast<int>(input.at(4)), 0),
 		static_cast<int>(input.at(5))
+	};
+
+	return 0;
+}
+
+int Get_Single_Container_Parameters2_By_Pos::masterCommand(const QList<QVariant> &input, QByteArray &output) const
+{
+	const auto pos = input.at(0).toInt();
+	if (pos < 0 || pos >= NUMBER_OF_POSITIONS) {
+		return -1;
+	}
+
+	output.append(pos);
+	output.append(6, 0x0);
+
+	return 0;
+}
+
+int Get_Single_Container_Parameters2_By_Pos::slaveResponse(const QByteArray &input, QList<QVariant> &output)
+{
+	if (input.size() != 7)
+		return -1;
+
+	const auto pos = static_cast<int>(input.at(0));
+	if (pos < 0 || pos >= NUMBER_OF_POSITIONS) {
+		return -2;
+	}
+
+	const auto rmntime = static_cast<int>(input.at(1) << 8 | input.at(2));
+
+	containers.at(pos)->setRemainingfoodcycletime(QTime(0, rmntime));
+	containers.at(pos)->setRemainingfoodcycles(static_cast<int>(input.at(3)));
+
+	output = {
+		QTime(0, rmntime),
+		static_cast<int>(input.at(3))
 	};
 
 	return 0;
