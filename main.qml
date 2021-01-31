@@ -51,5 +51,18 @@ ApplicationWindow {
 
     }
 
+    Dialog {
+        id: errordialog
+        title: "\n"
+        modal: true
+        width: 400
+        anchors.centerIn: parent
+        standardButtons: Dialog.Ok
+        contentItem: Label {
+            id: errortext
+            text: "\n"
+        }
+    }
+
 }
 

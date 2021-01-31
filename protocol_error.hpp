@@ -12,7 +12,7 @@ QML_NAMED_ELEMENT(Bioconverter)
 QML_UNCREATABLE("ProtocolError: only enums")
 
 enum class SlaveError {
-	NO_ERROR          = 0,
+	NO_SLAVE_ERROR          = 0,
 	ERROR_GENERIC,
 	HOME_ERROR_Z,
 	HOME_NO_ERROR_Z,
@@ -29,7 +29,7 @@ enum class SlaveError {
 Q_ENUM_NS(SlaveError);
 
 enum class MasterError {
-	NO_ERROR          = 0,
+	NO_MASTER_ERROR          = 0,
 	EXECUTING_OTHER_COMMAND,
 	UNSUPPORTED_COMMAND,
 	INVALID_INPUT_DATA,

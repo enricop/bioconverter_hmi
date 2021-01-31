@@ -6,6 +6,7 @@ import bioconverter 1.0
 
 ColumnLayout {
 
+    /*
     Button {
         text: "Open Serial Port"
         onClicked: {
@@ -15,20 +16,18 @@ ColumnLayout {
             }
         }
     }
+    */
 
     Flickable {
-        width: parent.width
-        height: 150
-        contentWidth: parent.width
+        contentWidth: outputrow.width
         contentHeight: writeoutput.height
-
         Layout.fillWidth: true
-        Layout.maximumHeight: 150
-        Layout.minimumHeight: 150
-
+        Layout.maximumHeight: 175
+        Layout.minimumHeight: 175
         clip: true
 
         RowLayout {
+            id: outputrow
             Label {
                 text: bio_backend.serialport.controlOutput
             }
@@ -39,25 +38,6 @@ ColumnLayout {
             Label {
                 text: bio_backend.serialport.readOutput
             }
-        }
-        contentY: contentHeight - height
-    }
-
-    Flickable {
-        width: parent.width
-        height: 50
-        contentWidth: parent.width
-        contentHeight: protooutput.height
-
-        Layout.fillWidth: true
-        Layout.maximumHeight: 50
-        Layout.minimumHeight: 50
-
-        clip: true
-
-        Label {
-            id: protooutput
-            text: bio_backend.protocol.protocolOutput
         }
         contentY: contentHeight - height
     }
@@ -150,11 +130,12 @@ ColumnLayout {
     ScrollView {
         Layout.fillHeight: true
         Layout.fillWidth: true
+        clip: true
 
         ListView {
             id: listView
 
-            enabled: false
+            enabled: true
 
             width: parent.width
 
@@ -170,7 +151,6 @@ ColumnLayout {
                         Button {
                             text: "Command: " + name
                             onClicked: {
-                                cmd_timer.start();
                                 bio_backend.protocol.runCommand(cmd, param);
                             }
                         }
@@ -184,50 +164,6 @@ ColumnLayout {
                     }
                 }
             }
-        }
-    }
-
-    Flickable {
-        id: commandscroll
-        width: parent.width
-        height: 150
-        contentWidth: parent.width
-        contentHeight: commandsoutput.height
-
-        Layout.fillWidth: true
-        Layout.maximumHeight: 150
-        Layout.minimumHeight: 150
-
-        clip: true
-
-        Label {
-            id: commandsoutput
-            text: " -- "
-        }
-
-        contentY: contentHeight - height
-    }
-
-    Connections {
-       target: bio_backend.protocol
-       function onCommandResult(cmd, master_error, proto_output, slave_error) {
-           cmd_timer.stop();
-           commandsoutput.text = commandsoutput.text.concat("\nExecuted command: ", cmd);
-           commandsoutput.text = commandsoutput.text.concat("\nmaster_error: ", master_error);
-           commandsoutput.text = commandsoutput.text.concat("\nOutput of command: ", proto_output);
-           commandsoutput.text = commandsoutput.text.concat("\nslave_error: ", slave_error);
-           commandsoutput.text = commandsoutput.text.concat("\n -- ");
-       }
-    }
-
-    Timer {
-        id: cmd_timer
-        interval: 10000
-        repeat: false
-        running: false
-        triggeredOnStart: false
-        onTriggered: {
-            console.log("Command timed out!");
         }
     }
 }

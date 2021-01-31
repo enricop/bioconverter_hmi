@@ -100,14 +100,14 @@ bool SerialPort_ReaderWriter::openSerialPort()
 {
 	const auto serialportnames = getAvailableSerialPorts();
 	if (serialportnames.empty()) {
-		m_controlOutput << "No Serial Ports found in the system";
+		m_controlOutput << "No Serial Ports found in the system\n";
 		Q_EMIT controlOutputChanged();
 		return false;
 	}
 
 	const auto serialportname = serialportnames.first();
 
-	m_controlOutput << "Opening Serial Port: " << serialportname;
+	m_controlOutput << "Opening Serial Port: " << serialportname << "\n";
 	Q_EMIT controlOutputChanged();
 
 	serialPort->setPortName(serialportname);
@@ -126,13 +126,13 @@ bool SerialPort_ReaderWriter::openSerialPort()
 							  Qt::BlockingQueuedConnection,
 							  Q_RETURN_ARG(bool, result));
 	if (ret == false) {
-		m_controlOutput << "Failed invoking 'open' method";
+		m_controlOutput << "Failed invoking 'open' method\n";
 		return false;
 	}
 	if (result == false) {
-		m_controlOutput << "Failed Opening Serial Port: " << serialportname << " with error " << serialPort->errorString();
+		m_controlOutput << "Failed Opening Serial Port: " << serialportname << " with error " << serialPort->errorString() << "\n";
 	} else {
-		m_controlOutput << "Serial Port: " << serialportname << " opened correctly!";
+		m_controlOutput << "Serial Port: " << serialportname << " opened correctly!\n";
 	}
 
 	return result;
