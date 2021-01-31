@@ -42,9 +42,9 @@ int Get_System_Info_1::slaveResponse(const QByteArray &input, QList<QVariant> &o
 		Q_EMIT functionInProgressChanged();
 	}
 	const auto e = static_cast<SlaveError>(input.at(6));
-	if (e != errorOccured) {
-		errorOccured = e;
-		Q_EMIT errorOccuredChanged();
+	if (e != errorOccurred) {
+		errorOccurred = e;
+		Q_EMIT errorOccurredChanged();
 	}
 
 	output = { QVariant::fromValue(status),
@@ -52,7 +52,7 @@ int Get_System_Info_1::slaveResponse(const QByteArray &input, QList<QVariant> &o
 			   QVariant::fromValue(foodAvailable),
 			   positionToProcess,
 			   QVariant::fromValue(functionInProgress),
-			   QVariant::fromValue(errorOccured) };
+			   QVariant::fromValue(errorOccurred) };
 	return 0;
 }
 

@@ -2,10 +2,14 @@
 #define PROTOCOL_ERROR_HPP
 
 #include <QObject>
+#include <qqml.h>
 
 namespace bioconverter {
 
 Q_NAMESPACE
+
+QML_NAMED_ELEMENT(Bioconverter)
+QML_UNCREATABLE("ProtocolError: only enums")
 
 enum class SlaveError {
 	NO_ERROR          = 0,
@@ -37,7 +41,6 @@ enum class MasterError {
 	SERIAL_PORT_ERROR
 };
 Q_ENUM_NS(MasterError);
-
 
 }
 

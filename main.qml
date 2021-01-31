@@ -3,7 +3,6 @@ import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.12
 
 import bioconverter 1.0
-import bioconverterenums 1.0
 
 ApplicationWindow {
     width: 1000
@@ -13,6 +12,13 @@ ApplicationWindow {
 
     Backend {
         id: bio_backend
+
+        Component.onCompleted: {
+            var ret = serialport.openSerialPort();
+            if (ret) {
+                thestackview.enabled = true;
+            }
+        }
     }
 
     menuBar: MenuBar {
@@ -38,6 +44,7 @@ ApplicationWindow {
         id: thestackview
         anchors.fill: parent
         initialItem: "qrc:/mainview.qml"
+        enabled: false
     }
 
     footer: Footer {

@@ -40,7 +40,7 @@ class Get_System_Info_1 : public QObject,  public Command
 	Q_PROPERTY(FoodAvailable foodAvailable READ getFoodAvailable NOTIFY foodAvailableChanged)
 	Q_PROPERTY(int positionToProcess READ getPositionToProcess NOTIFY positionToProcessChanged)
 	Q_PROPERTY(Function functionInProgress READ getFunctionInProgress NOTIFY functionInProgressChanged)
-	Q_PROPERTY(SlaveError errorOccured READ getErrorOccured NOTIFY errorOccuredChanged)
+	Q_PROPERTY(bioconverter::SlaveError errorOccurred READ getErrorOccurred NOTIFY errorOccurredChanged)
 
 public:
 	explicit Get_System_Info_1(QObject *parent = nullptr) :
@@ -50,7 +50,7 @@ public:
 		foodAvailable{},
 		positionToProcess{},
 		functionInProgress{},
-		errorOccured{}
+		errorOccurred{}
 	{};
 
 	enum class Status {
@@ -112,7 +112,7 @@ private:
 	FoodAvailable getFoodAvailable() { return foodAvailable; };
 	unsigned int getPositionToProcess() { return positionToProcess; };
 	Function getFunctionInProgress() { return functionInProgress; };
-	SlaveError getErrorOccured() { return errorOccured; };
+	SlaveError getErrorOccurred() { return errorOccurred; };
 
 Q_SIGNALS:
 	void statusChanged();
@@ -120,7 +120,7 @@ Q_SIGNALS:
 	void foodAvailableChanged();
 	void positionToProcessChanged();
 	void functionInProgressChanged();
-	void errorOccuredChanged();
+	void errorOccurredChanged();
 
 private:
 	Status status;
@@ -128,7 +128,7 @@ private:
 	FoodAvailable foodAvailable;
 	int positionToProcess;
 	Function functionInProgress;
-	SlaveError errorOccured;
+	SlaveError errorOccurred;
 };
 
 

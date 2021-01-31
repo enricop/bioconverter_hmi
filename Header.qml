@@ -3,7 +3,6 @@ import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.12
 
 import bioconverter 1.0
-import bioconverterenums 1.0
 
 ToolBar {
 
@@ -56,7 +55,7 @@ ToolBar {
             ToolButton {
                 Layout.alignment: Qt.AlignVCenter
                 Layout.fillWidth: true
-                text: "Last Error Occurred:\n" + bio_backend.protocol.systeminfo1.errorOccured
+                text: "Last Error Occurred:\n" + bio_backend.protocol.systeminfo1.errorOccurred
                 font.bold: true
                 font.pixelSize: 25
             }

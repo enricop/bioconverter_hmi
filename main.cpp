@@ -1,8 +1,6 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 
-#include "protocol_error.hpp"
-
 int main(int argc, char *argv[])
 {
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
@@ -10,13 +8,6 @@ int main(int argc, char *argv[])
 #endif
 
 	QGuiApplication app(argc, argv);
-
-	qmlRegisterUncreatableMetaObject(bioconverter::staticMetaObject, // static meta object
-									 "bioconverterenums",			// import statement
-									 1, 0,						    // major and minor version of the import
-									 "ProtocolError",					// name in QML
-									 "Error: only enums");          // error in case someone tries to create a SlaveError object
-
 
 	QQmlApplicationEngine engine;
 	const QUrl url(QStringLiteral("qrc:/main.qml"));
