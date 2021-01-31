@@ -12,10 +12,10 @@ int main(int argc, char *argv[])
 	QGuiApplication app(argc, argv);
 
 	qmlRegisterUncreatableMetaObject(bioconverter::staticMetaObject, // static meta object
-									 "bioconverterenums",				// import statement
+									 "bioconverterenums",			// import statement
 									 1, 0,						    // major and minor version of the import
-									 "SlaveError",                // name in QML
-									 "Error: only enums");          // error in case someone tries to create a MyNamespace object
+									 "ProtocolError",					// name in QML
+									 "Error: only enums");          // error in case someone tries to create a SlaveError object
 
 
 	QQmlApplicationEngine engine;

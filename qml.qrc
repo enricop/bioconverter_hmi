@@ -2,5 +2,11 @@
     <qresource prefix="/">
         <file>main.qml</file>
         <file>qtquickcontrols2.conf</file>
+        <file>mainview.qml</file>
+        <file>manualmode.qml</file>
+        <file>insertcontainer.qml</file>
+        <file>infocontainers.qml</file>
+        <file>Header.qml</file>
+        <file>Footer.qml</file>
     </qresource>
 </RCC>

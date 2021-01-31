@@ -102,7 +102,10 @@ private Q_SLOTS:
 	void serialErrorHandler(int error);
 
 Q_SIGNALS:
-	void commandResult(const QVariant cmd, const int master_error, const QVariantList proto_output, const QVariant slave_error);
+	void commandResult(const QVariant cmd,
+					   const QVariant master_error,
+					   const QVariantList proto_output,
+					   const QVariant slave_error);
 
 	void protocolOutputChanged();
 

@@ -53,14 +53,18 @@ void Protocol_MasterSlave::runCommand(const Protocol_MasterSlave::CommandName cm
 	if (current_command != CommandName::INVALID) {
 		m_protocolOutput << "The system is currently executing another command :" << metaEnum.valueToKey(static_cast<int>(current_command)) << "\n";
 		Q_EMIT protocolOutputChanged();
-		Q_EMIT commandResult(QVariant::fromValue(cmd), -9, output, QVariant::fromValue(SlaveError::NO_ERROR));
+		Q_EMIT commandResult(QVariant::fromValue(cmd),
+							 QVariant::fromValue(MasterError::EXECUTING_OTHER_COMMAND),
+							 output, QVariant::fromValue(SlaveError::NO_ERROR));
 		return;
 	}
 
 	if (!protocol_commands.count(cmd)) {
 		m_protocolOutput << "Unsupported command: " << static_cast<unsigned int>(cmd) << "\n";
 		Q_EMIT protocolOutputChanged();
-		Q_EMIT commandResult(QVariant::fromValue(cmd), -1, output, QVariant::fromValue(SlaveError::NO_ERROR));
+		Q_EMIT commandResult(QVariant::fromValue(cmd),
+							 QVariant::fromValue(MasterError::UNSUPPORTED_COMMAND),
+							 output, QVariant::fromValue(SlaveError::NO_ERROR));
 		return;
 	}
 
@@ -72,7 +76,9 @@ void Protocol_MasterSlave::runCommand(const Protocol_MasterSlave::CommandName cm
 	if (ret_master || bytesToBeWriteen.size() != 9) {
 		m_protocolOutput << "Invalid input data for master command: " << metaEnum.valueToKey(static_cast<int>(cmd)) << "\n";
 		Q_EMIT protocolOutputChanged();
-		Q_EMIT commandResult(QVariant::fromValue(cmd), -2, output, QVariant::fromValue(SlaveError::NO_ERROR));
+		Q_EMIT commandResult(QVariant::fromValue(cmd),
+							 QVariant::fromValue(MasterError::INVALID_INPUT_DATA),
+							 output, QVariant::fromValue(SlaveError::NO_ERROR));
 		return;
 	}
 
@@ -86,7 +92,9 @@ void Protocol_MasterSlave::runCommand(const Protocol_MasterSlave::CommandName cm
 	if (nbytesWritten != bytesToBeWriteen.size()) {
 		m_protocolOutput << "Failed writing master command: " << metaEnum.valueToKey(static_cast<int>(cmd)) << "\n";
 		Q_EMIT protocolOutputChanged();
-		Q_EMIT commandResult(QVariant::fromValue(cmd), -3, output, QVariant::fromValue(SlaveError::NO_ERROR));
+		Q_EMIT commandResult(QVariant::fromValue(cmd),
+							 QVariant::fromValue(MasterError::SERIAL_WRITE_FAILED),
+							 output, QVariant::fromValue(SlaveError::NO_ERROR));
 		return;
 	}
 
@@ -100,7 +108,9 @@ void Protocol_MasterSlave::serialDataHandler(const QByteArray dataRead)
 	if (!protocol_commands.count(current_command)) {
 		m_protocolOutput << "Invalid current command type: " << static_cast<unsigned int>(current_command) << "\n";
 		Q_EMIT protocolOutputChanged();
-		Q_EMIT commandResult(QVariant::fromValue(current_command), -4, output, QVariant::fromValue(SlaveError::NO_ERROR));
+		Q_EMIT commandResult(QVariant::fromValue(current_command),
+							 QVariant::fromValue(MasterError::INVALID_CURRENT_COMMAND),
+							 output, QVariant::fromValue(SlaveError::NO_ERROR));
 		current_command = CommandName::INVALID;
 		return;
 	}
@@ -114,7 +124,9 @@ void Protocol_MasterSlave::serialDataHandler(const QByteArray dataRead)
 	{
 		m_protocolOutput << "Invalid header data received for command: " << cmdEnum.valueToKey(static_cast<int>(current_command)) << "\n";
 		Q_EMIT protocolOutputChanged();
-		Q_EMIT commandResult(QVariant::fromValue(current_command), -6, output, QVariant::fromValue(SlaveError::NO_ERROR));
+		Q_EMIT commandResult(QVariant::fromValue(current_command),
+							 QVariant::fromValue(MasterError::INVALID_HEADER_RECEIVED),
+							 output, QVariant::fromValue(SlaveError::NO_ERROR));
 		current_command = CommandName::INVALID;
 		return;
 	}
@@ -127,7 +139,9 @@ void Protocol_MasterSlave::serialDataHandler(const QByteArray dataRead)
 	if (dataRead.at(9) != checksum) {
 		m_protocolOutput << "Invalid checksum data received for command: " << cmdEnum.valueToKey(static_cast<int>(current_command)) << "\n";
 		Q_EMIT protocolOutputChanged();
-		Q_EMIT commandResult(QVariant::fromValue(current_command), -7, output, QVariant::fromValue(SlaveError::NO_ERROR));
+		Q_EMIT commandResult(QVariant::fromValue(current_command),
+							 QVariant::fromValue(MasterError::INVALID_CHECKSUM_RECEIVED),
+							 output, QVariant::fromValue(SlaveError::NO_ERROR));
 		current_command = CommandName::INVALID;
 		return;
 	}
@@ -137,7 +151,9 @@ void Protocol_MasterSlave::serialDataHandler(const QByteArray dataRead)
 		m_protocolOutput << "Received protocol error " << errorEnum.valueToKey(static_cast<int>(dataRead.at(2)))
 						 << " from slave for command: " << cmdEnum.valueToKey(static_cast<int>(current_command)) << "\n";
 		Q_EMIT protocolOutputChanged();
-		Q_EMIT commandResult(QVariant::fromValue(current_command), 0, output, QVariant::fromValue(static_cast<SlaveError>(dataRead.at(2))));
+		Q_EMIT commandResult(QVariant::fromValue(current_command),
+							 QVariant::fromValue(MasterError::NO_ERROR), output,
+							 QVariant::fromValue(static_cast<SlaveError>(dataRead.at(2))));
 		current_command = CommandName::INVALID;
 		return;
 	}
@@ -147,7 +163,9 @@ void Protocol_MasterSlave::serialDataHandler(const QByteArray dataRead)
 	if (ret_slave) {
 		m_protocolOutput << "Cannot parse input bytes from slave response of command: " << cmdEnum.valueToKey(static_cast<int>(current_command)) << "\n";
 		Q_EMIT protocolOutputChanged();
-		Q_EMIT commandResult(QVariant::fromValue(current_command), -8, output, QVariant::fromValue(SlaveError::NO_ERROR));
+		Q_EMIT commandResult(QVariant::fromValue(current_command),
+							 QVariant::fromValue(MasterError::INVALID_DATA_RECEIVED),
+							 output, QVariant::fromValue(SlaveError::NO_ERROR));
 		current_command = CommandName::INVALID;
 		return;
 	}
@@ -160,7 +178,9 @@ void Protocol_MasterSlave::serialErrorHandler(int error)
 {
 	m_protocolOutput << "Serial port error: " << error << "\n";
 	Q_EMIT protocolOutputChanged();
-	Q_EMIT commandResult(QVariant::fromValue(current_command), -10, QVariantList(), QVariant::fromValue(SlaveError::NO_ERROR));
+	Q_EMIT commandResult(QVariant::fromValue(current_command),
+						 QVariant::fromValue(MasterError::SERIAL_PORT_ERROR),
+						 QVariantList(), QVariant::fromValue(SlaveError::NO_ERROR));
 	current_command = CommandName::INVALID;
 }
 
