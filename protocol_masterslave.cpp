@@ -133,11 +133,12 @@ void Protocol_MasterSlave::serialDataHandler(const QByteArray dataRead)
 
 	QByteArray bytesRead = dataRead.left(9);
 	std::uint8_t checksum = 0;
-	for (const auto b : qAsConst(bytesRead)) {
+	for (const auto &b : qAsConst(bytesRead)) {
 		checksum += b;
 	}
-	if (dataRead.at(9) != checksum) {
-		m_protocolOutput << "Invalid checksum data received for command: " << cmdEnum.valueToKey(static_cast<int>(cmd)) << "\n";
+	if (static_cast<std::uint8_t>(dataRead.back()) != checksum) {
+		m_protocolOutput << "Invalid checksum data received for command: " << cmdEnum.valueToKey(static_cast<int>(cmd)) << ")\n";
+		m_protocolOutput << "(computed:" << Qt::hex << checksum << ",actual:" << Qt::hex << static_cast<std::uint8_t>(dataRead.back()) << ")\n";
 		Q_EMIT protocolOutputChanged();
 		Q_EMIT commandResult(QVariant::fromValue(cmd),
 							 QVariant::fromValue(MasterError::INVALID_CHECKSUM_RECEIVED),

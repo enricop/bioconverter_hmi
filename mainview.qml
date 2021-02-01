@@ -7,6 +7,8 @@ import Qt.labs.platform 1.1
 import bioconverter 1.0
 
 Item {
+    id: themainview
+
     RowLayout {
         anchors.fill: parent
 
@@ -32,7 +34,9 @@ Item {
 
     }
 
+
     Connections {
+        enabled: (themainview.StackView.status == StackView.Active)
         target: bio_backend.protocol
         function onCommandResult(cmd, master_error, proto_output, slave_error) {
             if (cmd == Protocol_MasterSlave.TRY_TO_INSERT_NEW_CONTAINER) {
@@ -46,7 +50,7 @@ Item {
                     errordialog.open();
                     return;
                 }
-                thestackview.push("qrc:/insertcontainer.qml");
+                themainview.StackView.view.push("qrc:/insertcontainer.qml");
             }
             else if (cmd == Protocol_MasterSlave.GET_TAGS_NUMBER_AND_POSITION_0TO5 ||
                      cmd == Protocol_MasterSlave.GET_TAGS_NUMBER_AND_POSITION_6TO11 ||
@@ -77,7 +81,7 @@ Item {
                 }
                 else if (cmd == Protocol_MasterSlave.GET_TAGS_NUMBER_AND_POSITION_18TO23)
                 {
-                    thestackview.push("qrc:/infocontainers.qml");
+                    themainview.StackView.view.push("qrc:/infocontainers.qml");
                 }
             }
         }

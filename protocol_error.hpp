@@ -9,7 +9,7 @@ namespace bioconverter {
 Q_NAMESPACE
 
 QML_NAMED_ELEMENT(Bioconverter)
-QML_UNCREATABLE("ProtocolError: only enums")
+QML_UNCREATABLE("Bioconverter Namespace: only enums, not creatable")
 
 enum class SlaveError {
 	NO_SLAVE_ERROR          = 0,

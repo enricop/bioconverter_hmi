@@ -402,6 +402,11 @@ int Set_Single_Container_Parameters::masterCommand(const QList<QVariant> &input,
 
 	output.append(1, 0x0);
 
+	//da 0 a 10 food type
+	//da 0 a 255 food quantity units
+	//da 1 a 10 number of cycles
+	//da 0 a 255 cycle time
+
 	for (const auto &in : input) {
 		bool ok = false;
 		output.append(1, in.toInt(&ok));

@@ -9,7 +9,10 @@ ToolBar {
     ColumnLayout {
         anchors.fill: parent
 
-        RowLayout {
+        GridLayout {
+            columns: 3
+            rows: 2
+
             Layout.alignment: Qt.AlignVCenter
 
             ToolButton {
@@ -33,10 +36,6 @@ ToolBar {
                 font.bold: true
                 font.pixelSize: 25
             }
-        }
-
-        RowLayout {
-            Layout.alignment: Qt.AlignVCenter
 
             ToolButton {
                 Layout.alignment: Qt.AlignVCenter
