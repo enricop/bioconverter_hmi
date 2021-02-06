@@ -9,29 +9,33 @@ ItemDelegate {
     property int tag: -1
     property bool isback: false
 
-    width: 200
-    height: 50
+    hoverEnabled: true
+    highlighted: hovered
 
-    opacity: isback ? 1.0 : 0.8
+    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+    Layout.preferredHeight: 55
+    Layout.preferredWidth: 220
+
+    opacity: highlighted ? 1.0 : (isback ? 1.0 : 0.8)
 
     contentItem: ColumnLayout {
         RowLayout {
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
             Label {
                 text: isback ? "Back" : "Front"
             }
-
             Label {
                 text: " - "
             }
-
             Label {
                 text: "Position: " + (pos + 1);
             }
         }
 
         Label {
-            Layout.alignment: Qt.AlignHCenter
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+            font.bold: true
             text: {
                 if (tag < 0)
                     return "Empty";
@@ -43,6 +47,7 @@ ItemDelegate {
     }
 
     background: Rectangle {
+        border.width: highlighted ? 3 : 0
         color: {
             if (tag < 0)
                 return "orange";
