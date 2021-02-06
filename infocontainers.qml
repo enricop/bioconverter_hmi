@@ -60,7 +60,6 @@ Item {
                         isback: true
                         tag: modelData.tagprop
                         pos: modelData.posprop
-                        level: modelData.posprop/2
                     }
                 }
             }
@@ -93,32 +92,4 @@ Item {
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
         }
     }
-
-    Connections {
-        enabled: (thecontainersinfo.StackView.status == StackView.Active)
-        target: bio_backend.protocol
-        function onCommandResult(cmd, master_error, proto_output, slave_error) {
-            if (cmd == Protocol_MasterSlave.SET_SINGLE_CONTAINER_PARAMETERS1) {
-                if (master_error != Bioconverter.NO_MASTER_ERROR ||
-                    slave_error != Bioconverter.NO_SLAVE_ERROR)
-                {
-                    errordialog.title = "SET_SINGLE_CONTAINER_PARAMETERS1 command error"
-                    errortext.text = "\n";
-                    errortext.text = errortext.text.concat("\nmaster_error: ", master_error);
-                    errortext.text = errortext.text.concat("\nslave_error: ", slave_error);
-                    errordialog.open();
-                }
-                else
-                {
-                    successdialog.title = "SET_SINGLE_CONTAINER_PARAMETERS1 command successfull"
-                    successtext.text = "\n";
-                    successtext.text = successtext.text.concat("\nCONTAINER INSERTED SUCCESSFULLY WITH TAG: ", bio_backend.protocol.setp.newtag);
-                    successtext.text = successtext.text.concat("\nRETURNED TAG: ", proto_output[0]);
-                    successdialog.open();
-                    theinsertcontainerpage.StackView.view.pop();
-                }
-            }
-        }
-    }
-
 }

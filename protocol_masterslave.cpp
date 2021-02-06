@@ -51,7 +51,8 @@ void Protocol_MasterSlave::runCommand(const Protocol_MasterSlave::CommandName cm
 	QVariantList output;
 
 	if (current_command != CommandName::INVALID) {
-		m_protocolOutput << "The system is currently executing another command :" << metaEnum.valueToKey(static_cast<int>(current_command)) << "\n";
+		m_protocolOutput << "The system is executing another command :" << metaEnum.valueToKey(static_cast<int>(current_command))
+						 << " when " << metaEnum.valueToKey(static_cast<int>(cmd)) << " was issued\n";
 		Q_EMIT protocolOutputChanged();
 		Q_EMIT commandResult(QVariant::fromValue(cmd),
 							 QVariant::fromValue(MasterError::EXECUTING_OTHER_COMMAND),

@@ -461,7 +461,7 @@ class Get_Single_Container_Parameters1_By_Pos : public QObject,  public Command
 	QML_NAMED_ELEMENT(Get_Signle_Container_Parameters1_By_Pos)
 	QML_UNCREATABLE("Get_Signle_Container_Parameters1_By_Pos is always a named property of protocol")
 
-	Q_PROPERTY(QQmlListProperty<Container_Parameters1> containers READ getContainers)
+	Q_PROPERTY(QQmlListProperty<bioconverter::Container_Parameters1> containers READ getContainers)
 
 public:
 	explicit Get_Single_Container_Parameters1_By_Pos(QObject *parent = nullptr) :
@@ -539,7 +539,7 @@ class Get_Single_Container_Parameters2_By_Pos : public QObject,  public Command
 	QML_NAMED_ELEMENT(Get_Single_Container_Parameters2_By_Pos)
 	QML_UNCREATABLE("Get_Single_Container_Parameters2_By_Pos is always a named property of protocol")
 
-	Q_PROPERTY(QQmlListProperty<Container_Parameters2> containers READ getContainers)
+	Q_PROPERTY(QQmlListProperty<bioconverter::Container_Parameters2> containers READ getContainers)
 
 public:
 	explicit Get_Single_Container_Parameters2_By_Pos(QObject *parent = nullptr) :

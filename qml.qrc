@@ -9,5 +9,6 @@
         <file>Header.qml</file>
         <file>Footer.qml</file>
         <file>Infocontainer_button.qml</file>
+        <file>ContainerParameters.qml</file>
     </qresource>
 </RCC>

@@ -320,6 +320,7 @@ int Get_Single_Container_Parameters1_By_Pos::slaveResponse(const QByteArray &inp
 	containers.at(pos)->setFoodcycles(static_cast<int>(input.at(5)));
 
 	output = {
+		pos,
 		QVariant::fromValue(static_cast<Container_Parameters1::Status>(input.at(1))),
 		static_cast<int>(input.at(2)),
 		static_cast<int>(input.at(3)),
@@ -365,6 +366,7 @@ int Get_Single_Container_Parameters2_By_Pos::slaveResponse(const QByteArray &inp
 	containers.at(pos)->setRemainingfoodcycles(static_cast<int>(input.at(3)));
 
 	output = {
+		pos,
 		QTime(0, rmntime),
 		static_cast<int>(input.at(3))
 	};
