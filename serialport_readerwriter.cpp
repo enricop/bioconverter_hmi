@@ -54,7 +54,7 @@ SerialPort_ReaderWriter::SerialPort_ReaderWriter(QObject *parent)
 
 SerialPort_ReaderWriter::~SerialPort_ReaderWriter()
 {
-	QMetaObject::invokeMethod(serialBridge.get(), "close", Qt::BlockingQueuedConnection);
+	closeSerialPort();
 	serialWorker->quit();
 	serialWorker->wait();
 }
@@ -126,7 +126,7 @@ bool SerialPort_ReaderWriter::openSerialPort()
 							  Qt::BlockingQueuedConnection,
 							  Q_RETURN_ARG(bool, result));
 	if (ret == false) {
-		m_controlOutput << "Failed invoking 'open' method\n";
+		m_controlOutput << "Failed invoking serial 'open' method\n";
 		return false;
 	}
 	if (result == false) {
@@ -136,6 +136,16 @@ bool SerialPort_ReaderWriter::openSerialPort()
 	}
 
 	return result;
+}
+
+bool SerialPort_ReaderWriter::closeSerialPort()
+{
+	bool ret = 	QMetaObject::invokeMethod(serialBridge.get(), "close", Qt::BlockingQueuedConnection);
+	if (ret == false) {
+		m_controlOutput << "Failed invoking serial 'close' method\n";
+		return false;
+	}
+	return true;
 }
 
 qint64 SerialPort_ReaderWriter::write(const QByteArray &writeData)

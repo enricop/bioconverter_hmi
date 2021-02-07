@@ -48,6 +48,7 @@ public:
 	qint64 write(const QByteArray &writeData);
 
 	Q_INVOKABLE bool openSerialPort();
+	Q_INVOKABLE bool closeSerialPort();
 
 private Q_SLOTS:
 	void handleReadyRead();

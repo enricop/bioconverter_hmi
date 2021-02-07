@@ -5,6 +5,7 @@
 #include <QByteArray>
 #include <QObject>
 #include <QTime>
+#include <QMetaEnum>
 
 #include <qqml.h>
 
@@ -35,11 +36,12 @@ class Get_System_Info_1 : public QObject,  public Command
 	QML_NAMED_ELEMENT(Get_System_Info_1)
 	QML_UNCREATABLE("Get_System_Info_1 is always a named property of protocol")
 
-	Q_PROPERTY(Status status READ getStatus NOTIFY statusChanged)
-	Q_PROPERTY(Action action READ getAction NOTIFY actionChanged)
-	Q_PROPERTY(FoodAvailable foodAvailable READ getFoodAvailable NOTIFY foodAvailableChanged)
+	Q_PROPERTY(QString status READ getStatus NOTIFY statusChanged)
+	Q_PROPERTY(QString action READ getAction NOTIFY actionChanged)
+	Q_PROPERTY(QString foodAvailable READ getFoodAvailable NOTIFY foodAvailableChanged)
 	Q_PROPERTY(int positionToProcess READ getPositionToProcess NOTIFY positionToProcessChanged)
-	Q_PROPERTY(Function functionInProgress READ getFunctionInProgress NOTIFY functionInProgressChanged)
+	Q_PROPERTY(QString functionInProgress READ getFunctionInProgress NOTIFY functionInProgressChanged)
+	Q_PROPERTY(QString errorOccurredStr READ getErrorOccurredStr NOTIFY errorOccurredChanged)
 	Q_PROPERTY(bioconverter::SlaveError errorOccurred READ getErrorOccurred NOTIFY errorOccurredChanged)
 
 public:
@@ -107,12 +109,13 @@ public:
 	virtual int slaveResponse(const QByteArray &input, QList<QVariant> &output) override;
 
 private:
-	Status getStatus() { return status; };
-	Action getAction() { return action; };
-	FoodAvailable getFoodAvailable() { return foodAvailable; };
+	QString getStatus() { return QMetaEnum::fromType<Status>().valueToKey(static_cast<int>(status)); };
+	QString getAction() { return QMetaEnum::fromType<Action>().valueToKey(static_cast<int>(action)); };
+	QString getFoodAvailable() { return QMetaEnum::fromType<FoodAvailable>().valueToKey(static_cast<int>(foodAvailable)); };
 	unsigned int getPositionToProcess() { return positionToProcess; };
-	Function getFunctionInProgress() { return functionInProgress; };
-	SlaveError getErrorOccurred() { return errorOccurred; };
+	QString getFunctionInProgress() { return QMetaEnum::fromType<Function>().valueToKey(static_cast<int>(functionInProgress)); };
+	QString getErrorOccurredStr() { return QMetaEnum::fromType<SlaveError>().valueToKey(static_cast<int>(errorOccurred)); };
+	bioconverter::SlaveError getErrorOccurred() { return errorOccurred; };
 
 Q_SIGNALS:
 	void statusChanged();

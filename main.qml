@@ -23,16 +23,17 @@ ApplicationWindow {
 
     menuBar: MenuBar {
         Menu {
-            title: qsTr("&ContainersSwapping")
-            Action { text: qsTr("&Info") }
+            title: qsTr("&Swapping")
+            Action { text: qsTr("&Info"); onTriggered: thestackview.push("qrc:/swappinginfo.qml");  }
         }
         Menu {
             title: qsTr("&Advanced")
-            Action { text: qsTr("&ManualMode"); onTriggered: thestackview.push("qrc:/manualmode.qml"); }
+            Action { text: qsTr("&Manual Mode"); onTriggered: thestackview.push("qrc:/manualmode.qml"); }
+            Action { text: qsTr("&Manage Serial Port"); onTriggered: thestackview.push("qrc:/serialmng.qml"); }
         }
         Menu {
             title: qsTr("&Help")
-            Action { text: qsTr("&About") }
+            Action { text: qsTr("&About"); onTriggered: thestackview.push("qrc:/about.qml"); }
         }
     }
 

@@ -10,5 +10,6 @@
         <file>Footer.qml</file>
         <file>Infocontainer_button.qml</file>
         <file>ContainerParameters.qml</file>
+        <file>erroroccurred.qml</file>
     </qresource>
 </RCC>
