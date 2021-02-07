@@ -12,7 +12,7 @@ QML_NAMED_ELEMENT(Bioconverter)
 QML_UNCREATABLE("Bioconverter Namespace: only enums, not creatable")
 
 enum class SlaveError {
-	NO_SLAVE_ERROR          = 0,
+	NO_SYSTEM_ERROR          = 0,
 	ERROR_GENERIC,
 	HOME_ERROR_Z,
 	HOME_NO_ERROR_Z,

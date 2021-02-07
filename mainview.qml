@@ -40,7 +40,7 @@ Item {
         function onCommandResult(cmd, master_error, proto_output, slave_error) {
             if (cmd == Protocol_MasterSlave.TRY_TO_INSERT_NEW_CONTAINER) {
                 if (master_error != Bioconverter.NO_MASTER_ERROR ||
-                    slave_error != Bioconverter.NO_SLAVE_ERROR)
+                    slave_error != Bioconverter.NO_SYSTEM_ERROR)
                 {
                     errordialog.title = "TRY_TO_INSERT_NEW_CONTAINER command error"
                     errortext.text = "\n";
@@ -57,7 +57,7 @@ Item {
                      cmd == Protocol_MasterSlave.GET_TAGS_NUMBER_AND_POSITION_18TO23)
             {
                 if (master_error != Bioconverter.NO_MASTER_ERROR ||
-                    slave_error != Bioconverter.NO_SLAVE_ERROR)
+                    slave_error != Bioconverter.NO_SYSTEM_ERROR)
                 {
                     errordialog.title = "GET_TAGS_NUMBER_AND_POSITION command error"
                     errortext.text = "\n";

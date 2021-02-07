@@ -41,7 +41,10 @@ class Get_System_Info_1 : public QObject,  public Command
 	Q_PROPERTY(QString action READ getAction NOTIFY actionChanged)
 	Q_PROPERTY(QString foodAvailable READ getFoodAvailable NOTIFY foodAvailableChanged)
 	Q_PROPERTY(int positionToProcess READ getPositionToProcess NOTIFY positionToProcessChanged)
-	Q_PROPERTY(QString functionInProgress READ getFunctionInProgress NOTIFY functionInProgressChanged)
+	Q_PROPERTY(QString function1InProgress READ getFunction1InProgress NOTIFY function1InProgressChanged)
+	Q_PROPERTY(QString function2InProgress READ getFunction2InProgress NOTIFY function2InProgressChanged)
+	Q_PROPERTY(QString function3InProgress READ getFunction3InProgress NOTIFY function3InProgressChanged)
+	Q_PROPERTY(QString function4InProgress READ getFunction4InProgress NOTIFY function4InProgressChanged)
 	Q_PROPERTY(QString errorOccurredStr READ getErrorOccurredStr NOTIFY errorOccurredChanged)
 	Q_PROPERTY(bioconverter::SlaveError errorOccurred READ getErrorOccurred NOTIFY errorOccurredChanged)
 
@@ -52,7 +55,10 @@ public:
 		action{},
 		foodAvailable{},
 		positionToProcess{},
-		functionInProgress{},
+		function1InProgress{},
+		function2InProgress{},
+		function3InProgress{},
+		function4InProgress{},
 		errorOccurred{}
 	{};
 
@@ -70,9 +76,9 @@ public:
 	Q_ENUM(Status);
 
 	enum class Action {
-		SYS_ACTION_NO_ACTION					= 0,
-		SYS_ACTION_USER_INSERT_NEW_CONTAINER 	= 1,
-		SYS_ACTION_USER_SHOW_CONTAINER          = 2
+		ACTION_NO_ACTION					= 0,
+		ACTION_USER_INSERT_NEW_CONTAINER 	= 1,
+		ACTION_USER_SHOW_CONTAINER          = 2
 	};
 	Q_ENUM(Action);
 
@@ -84,27 +90,34 @@ public:
 	};
 	Q_ENUM(FoodAvailable);
 
-	enum class Function {
-		FUNCTION_NO_RUN										= 0x0000,
-		FUNCTION_NOT_INITIALIZED							= 0x00FF,
-
-		FUNCTION_REFILL_CONTAINER   						= 0x1000, //functionInProgress_H  High bits
-		FUNCTION_MOVE_CONTAINER_FROM_FLOOR_TO_EXIT          = 0x2000, //functionInProgress_H  High bits
-		FUNCTION_SYS_ACTION_USER_INSERT_NEW_CONTAINER       = 0x3000, //functionInProgress_H  High bits
-		FUNCTION_SYS_ACTION_USER_SHOW_CONTAINER             = 0x4000, //functionInProgress_H  High bits
-		FUNCTION_SUPERVISOR_MANAGE_ERROR                    = 0x5000, //functionInProgress_H  High bits
-
-		FUNCTION_MOVE_CONTAINER_FROM_FOOD_PLATFORM_TO_FLOOR = 0x0100, //functionInProgress_H  Low bits
-		FUNCTION_MOVE_CONTAINER_FROM_FLOOR_TO_FOOD_PALTFORM = 0x0200, //functionInProgress_H  Low bits
-		FUNCTION_FOOD_IMMITION 								= 0x0300, //functionInProgress_H  Low bits
-
-		FUNCTION_EXTRACT_CONTAINER_FROM_FLOOR               = 0x10, //functionInProgress_L  High bits
-		FUNCTION_INSERT_CONTAINER_INTO_FLOOR                = 0x20, //functionInProgress_L  High bits
-		FUNCTION_AZIONA_DOSATORE                            = 0x30, //functionInProgress_L  High bits
-
-		FUNCTION_SET_POSITION_NASTRINO_ASCENSORE            = 0x01, //functionInProgress_L  Low bits
+	enum class Function1 {
+		NO_RUN									   = 0x00,
+		REFILL_CONTAINER						   = 0x10,
+		MOVE_CONTAINER_FROM_FLOOR_TO_EXIT          = 0x20,
+		SYS_ACTION_USER_INSERT_NEW_CONTAINER       = 0x30,
+		SYS_ACTION_USER_SHOW_CONTAINER             = 0x40,
+		SUPERVISOR_MANAGE_ERROR                    = 0x50,
 	};
-	Q_ENUM(Function);
+	Q_ENUM(Function1);
+	enum class Function2 {
+		NO_RUN									   = 0x00,
+		MOVE_CONTAINER_FROM_FOOD_PLATFORM_TO_FLOOR = 0x01,
+		MOVE_CONTAINER_FROM_FLOOR_TO_FOOD_PLATFORM = 0x02,
+		FOOD_IMMITION 							   = 0x03,
+	};
+	Q_ENUM(Function2);
+	enum class Function3 {
+		NO_RUN						      = 0x00,
+		EXTRACT_CONTAINER_FROM_FLOOR      = 0x10,
+		INSERT_CONTAINER_INTO_FLOOR       = 0x20,
+		AZIONA_DOSATORE                   = 0x30,
+	};
+	Q_ENUM(Function3);
+	enum class Function4 {
+		NO_RUN							  = 0x00,
+		SET_POSITION_NASTRINO_ASCENSORE   = 0x01,
+	};
+	Q_ENUM(Function4);
 
 	virtual int masterCommand(const QList<QVariant> &input, QByteArray &output) const override;
 	virtual int slaveResponse(const QByteArray &input, QList<QVariant> &output) override;
@@ -115,7 +128,10 @@ private:
 	QString getAction() { return QMetaEnum::fromType<Action>().valueToKey(static_cast<int>(action)); };
 	QString getFoodAvailable() { return QMetaEnum::fromType<FoodAvailable>().valueToKey(static_cast<int>(foodAvailable)); };
 	unsigned int getPositionToProcess() { return positionToProcess; };
-	QString getFunctionInProgress() { return QMetaEnum::fromType<Function>().valueToKey(static_cast<int>(functionInProgress)); };
+	QString getFunction1InProgress() { return QMetaEnum::fromType<Function1>().valueToKey(static_cast<int>(function1InProgress)); };
+	QString getFunction2InProgress() { return QMetaEnum::fromType<Function2>().valueToKey(static_cast<int>(function2InProgress)); };
+	QString getFunction3InProgress() { return QMetaEnum::fromType<Function3>().valueToKey(static_cast<int>(function3InProgress)); };
+	QString getFunction4InProgress() { return QMetaEnum::fromType<Function4>().valueToKey(static_cast<int>(function4InProgress)); };
 	QString getErrorOccurredStr() { return QMetaEnum::fromType<SlaveError>().valueToKey(static_cast<int>(errorOccurred)); };
 	bioconverter::SlaveError getErrorOccurred() { return errorOccurred; };
 
@@ -124,7 +140,10 @@ Q_SIGNALS:
 	void actionChanged();
 	void foodAvailableChanged();
 	void positionToProcessChanged();
-	void functionInProgressChanged();
+	void function1InProgressChanged();
+	void function2InProgressChanged();
+	void function3InProgressChanged();
+	void function4InProgressChanged();
 	void errorOccurredChanged();
 
 private:
@@ -132,7 +151,10 @@ private:
 	Action action;
 	FoodAvailable foodAvailable;
 	int positionToProcess;
-	Function functionInProgress;
+	Function1 function1InProgress;
+	Function2 function2InProgress;
+	Function3 function3InProgress;
+	Function4 function4InProgress;
 	SlaveError errorOccurred;
 };
 

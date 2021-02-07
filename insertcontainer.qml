@@ -143,7 +143,7 @@ Item {
         function onCommandResult(cmd, master_error, proto_output, slave_error) {
             if (cmd == Protocol_MasterSlave.ABORT_MANUAL_ACTION) {
                 if (master_error != Bioconverter.NO_MASTER_ERROR ||
-                    slave_error != Bioconverter.NO_SLAVE_ERROR)
+                    slave_error != Bioconverter.NO_SYSTEM_ERROR)
                 {
                     errordialog.title = "CANCEL_CONTAINER_BY_TAG command error"
                     errortext.text = "\n";
@@ -163,7 +163,7 @@ Item {
         function onCommandResult(cmd, master_error, proto_output, slave_error) {
             if (cmd == Protocol_MasterSlave.SET_SINGLE_CONTAINER_PARAMETERS1) {
                 if (master_error != Bioconverter.NO_MASTER_ERROR ||
-                    slave_error != Bioconverter.NO_SLAVE_ERROR)
+                    slave_error != Bioconverter.NO_SYSTEM_ERROR)
                 {
                     errordialog.title = "SET_SINGLE_CONTAINER_PARAMETERS1 command error"
                     errortext.text = "\n";

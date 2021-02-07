@@ -69,7 +69,7 @@ ItemDelegate {
                 cmd == Protocol_MasterSlave.GET_SINGLE_CONTAINER_PARAMETERS2_BY_POS)
             {
                 if (master_error != Bioconverter.NO_MASTER_ERROR ||
-                    slave_error != Bioconverter.NO_SLAVE_ERROR)
+                    slave_error != Bioconverter.NO_SYSTEM_ERROR)
                 {
                     errordialog.title = "GET_SINGLE_CONTAINER_PARAMETERS_BY_POS command error"
                     errortext.text = "\n";

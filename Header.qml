@@ -7,57 +7,77 @@ import bioconverter 1.0
 ToolBar {
     id: theheader
 
-    property int labelsize: 18
+    property int labelsize: 17
 
     property alias pollingenabled: getinfotimer.running
 
     ColumnLayout {
         anchors.fill: parent
 
-        GridLayout {
-            columns: 3
-            rows: 2
-
+        RowLayout {
             Layout.alignment: Qt.AlignVCenter
 
             ToolButton {
-                Layout.alignment: Qt.AlignVCenter
+                Layout.alignment: Qt.AlignVCenter | Qt.AlignVCenter
                 Layout.fillWidth: true
                 text: "Status:\n" + bio_backend.protocol.systeminfo1.statusStr
                 font.bold: true
                 font.pixelSize: labelsize
             }
             ToolButton {
-                Layout.alignment: Qt.AlignVCenter
+                Layout.alignment: Qt.AlignVCenter | Qt.AlignVCenter
                 Layout.fillWidth: true
                 text: "Current Action:\n" + bio_backend.protocol.systeminfo1.action
                 font.bold: true
                 font.pixelSize: labelsize
             }
             ToolButton {
-                Layout.alignment: Qt.AlignVCenter
+                Layout.alignment: Qt.AlignVCenter | Qt.AlignVCenter
                 Layout.fillWidth: true
                 text: "Available Food:\n" + bio_backend.protocol.systeminfo1.foodAvailable
                 font.bold: true
                 font.pixelSize: labelsize
             }
+        }
+        RowLayout {
 
             ToolButton {
-                Layout.alignment: Qt.AlignVCenter
+                Layout.alignment: Qt.AlignVCenter | Qt.AlignVCenter
                 Layout.fillWidth: true
                 text: "Position to process:\n" + bio_backend.protocol.systeminfo1.positionToProcess
                 font.bold: true
                 font.pixelSize: labelsize
             }
             ToolButton {
-                Layout.alignment: Qt.AlignVCenter
+                Layout.alignment: Qt.AlignVCenter | Qt.AlignVCenter
                 Layout.fillWidth: true
-                text: "Current Function:\n" + bio_backend.protocol.systeminfo1.functionInProgress
+                text: "F1:\n" + bio_backend.protocol.systeminfo1.function1InProgress
                 font.bold: true
                 font.pixelSize: labelsize
             }
             ToolButton {
-                Layout.alignment: Qt.AlignVCenter
+                Layout.alignment: Qt.AlignVCenter | Qt.AlignVCenter
+                Layout.fillWidth: true
+                text: "F2:\n" + bio_backend.protocol.systeminfo1.function2InProgress
+                font.bold: true
+                font.pixelSize: labelsize
+            }
+            ToolButton {
+                Layout.alignment: Qt.AlignVCenter | Qt.AlignVCenter
+                Layout.fillWidth: true
+                text: "F3:\n" + bio_backend.protocol.systeminfo1.function3InProgress
+                font.bold: true
+                font.pixelSize: labelsize
+            }
+            ToolButton {
+                Layout.alignment: Qt.AlignVCenter | Qt.AlignVCenter
+                Layout.fillWidth: true
+                text: "F4:\n" + bio_backend.protocol.systeminfo1.function4InProgress
+                font.bold: true
+                font.pixelSize: labelsize
+            }
+            ToolButton {
+                Layout.alignment: Qt.AlignVCenter | Qt.AlignVCenter
                 Layout.fillWidth: true
                 text: "Last Error Occurred:\n" + bio_backend.protocol.systeminfo1.errorOccurredStr
                 font.bold: true
@@ -87,7 +107,7 @@ ToolBar {
                 }
 
                 if (master_error != Bioconverter.NO_MASTER_ERROR ||
-                    slave_error != Bioconverter.NO_SLAVE_ERROR)
+                    slave_error != Bioconverter.NO_SYSTEM_ERROR)
                 {
                     errordialog.title = "GET_SYSTEM_INFO_1 command error"
                     errortext.text = "\n";
@@ -104,7 +124,7 @@ ToolBar {
         target: bio_backend.protocol.systeminfo1
         function onErrorOccurredChanged() {
             console.log("ErrorOccurred: ", bio_backend.protocol.systeminfo1.errorOccurred);
-            if (bio_backend.protocol.systeminfo1.errorOccurred == Bioconverter.NO_SLAVE_ERROR)
+            if (bio_backend.protocol.systeminfo1.errorOccurred == Bioconverter.NO_SYSTEM_ERROR)
                 return;
 
             thestackview.push("qrc:/erroroccurred.qml");

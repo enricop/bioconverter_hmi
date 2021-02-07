@@ -57,7 +57,7 @@ void Protocol_MasterSlave::runCommand(const Protocol_MasterSlave::CommandName cm
 		Q_EMIT protocolOutputChanged();
 		Q_EMIT commandResult(QVariant::fromValue(cmd),
 							 QVariant::fromValue(MasterError::EXECUTING_OTHER_COMMAND),
-							 output, QVariant::fromValue(SlaveError::NO_SLAVE_ERROR));
+							 output, QVariant::fromValue(SlaveError::NO_SYSTEM_ERROR));
 		return;
 	}
 
@@ -66,7 +66,7 @@ void Protocol_MasterSlave::runCommand(const Protocol_MasterSlave::CommandName cm
 		Q_EMIT protocolOutputChanged();
 		Q_EMIT commandResult(QVariant::fromValue(cmd),
 							 QVariant::fromValue(MasterError::UNSUPPORTED_COMMAND),
-							 output, QVariant::fromValue(SlaveError::NO_SLAVE_ERROR));
+							 output, QVariant::fromValue(SlaveError::NO_SYSTEM_ERROR));
 		return;
 	}
 
@@ -80,7 +80,7 @@ void Protocol_MasterSlave::runCommand(const Protocol_MasterSlave::CommandName cm
 		Q_EMIT protocolOutputChanged();
 		Q_EMIT commandResult(QVariant::fromValue(cmd),
 							 QVariant::fromValue(MasterError::INVALID_INPUT_DATA),
-							 output, QVariant::fromValue(SlaveError::NO_SLAVE_ERROR));
+							 output, QVariant::fromValue(SlaveError::NO_SYSTEM_ERROR));
 		return;
 	}
 
@@ -96,7 +96,7 @@ void Protocol_MasterSlave::runCommand(const Protocol_MasterSlave::CommandName cm
 		Q_EMIT protocolOutputChanged();
 		Q_EMIT commandResult(QVariant::fromValue(cmd),
 							 QVariant::fromValue(MasterError::SERIAL_WRITE_FAILED),
-							 output, QVariant::fromValue(SlaveError::NO_SLAVE_ERROR));
+							 output, QVariant::fromValue(SlaveError::NO_SYSTEM_ERROR));
 		return;
 	}
 
@@ -114,7 +114,7 @@ void Protocol_MasterSlave::serialDataHandler(const QByteArray dataRead)
 		Q_EMIT protocolOutputChanged();
 		Q_EMIT commandResult(QVariant::fromValue(cmd),
 							 QVariant::fromValue(MasterError::INVALID_CURRENT_COMMAND),
-							 output, QVariant::fromValue(SlaveError::NO_SLAVE_ERROR));
+							 output, QVariant::fromValue(SlaveError::NO_SYSTEM_ERROR));
 		return;
 	}
 
@@ -129,7 +129,7 @@ void Protocol_MasterSlave::serialDataHandler(const QByteArray dataRead)
 		Q_EMIT protocolOutputChanged();
 		Q_EMIT commandResult(QVariant::fromValue(cmd),
 							 QVariant::fromValue(MasterError::INVALID_HEADER_RECEIVED),
-							 output, QVariant::fromValue(SlaveError::NO_SLAVE_ERROR));
+							 output, QVariant::fromValue(SlaveError::NO_SYSTEM_ERROR));
 		return;
 	}
 
@@ -144,7 +144,7 @@ void Protocol_MasterSlave::serialDataHandler(const QByteArray dataRead)
 		Q_EMIT protocolOutputChanged();
 		Q_EMIT commandResult(QVariant::fromValue(cmd),
 							 QVariant::fromValue(MasterError::INVALID_CHECKSUM_RECEIVED),
-							 output, QVariant::fromValue(SlaveError::NO_SLAVE_ERROR));
+							 output, QVariant::fromValue(SlaveError::NO_SYSTEM_ERROR));
 		return;
 	}
 
@@ -166,7 +166,7 @@ void Protocol_MasterSlave::serialDataHandler(const QByteArray dataRead)
 		Q_EMIT protocolOutputChanged();
 		Q_EMIT commandResult(QVariant::fromValue(cmd),
 							 QVariant::fromValue(MasterError::INVALID_DATA_RECEIVED),
-							 output, QVariant::fromValue(SlaveError::NO_SLAVE_ERROR));
+							 output, QVariant::fromValue(SlaveError::NO_SYSTEM_ERROR));
 		return;
 	}
 
@@ -174,7 +174,7 @@ void Protocol_MasterSlave::serialDataHandler(const QByteArray dataRead)
 	Q_EMIT protocolOutputChanged();
 	Q_EMIT commandResult(QVariant::fromValue(cmd),
 						 QVariant::fromValue(MasterError::NO_MASTER_ERROR),
-						 output, QVariant::fromValue(SlaveError::NO_SLAVE_ERROR));
+						 output, QVariant::fromValue(SlaveError::NO_SYSTEM_ERROR));
 }
 
 void Protocol_MasterSlave::serialErrorHandler(int error)
@@ -185,7 +185,7 @@ void Protocol_MasterSlave::serialErrorHandler(int error)
 	current_command = CommandName::INVALID;
 	Q_EMIT commandResult(QVariant::fromValue(cmd),
 						 QVariant::fromValue(MasterError::SERIAL_PORT_ERROR),
-						 QVariantList(), QVariant::fromValue(SlaveError::NO_SLAVE_ERROR));
+						 QVariantList(), QVariant::fromValue(SlaveError::NO_SYSTEM_ERROR));
 }
 
 }

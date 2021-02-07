@@ -165,7 +165,7 @@ ColumnLayout {
         function onCommandResult(cmd, master_error, proto_output, slave_error) {
             if (cmd == Protocol_MasterSlave.CANCEL_CONTAINER_BY_TAG) {
                 if (master_error != Bioconverter.NO_MASTER_ERROR ||
-                    slave_error != Bioconverter.NO_SLAVE_ERROR)
+                    slave_error != Bioconverter.NO_SYSTEM_ERROR)
                 {
                     errordialog.title = "CANCEL_CONTAINER_BY_TAG command error"
                     errortext.text = "\n";
@@ -179,7 +179,7 @@ ColumnLayout {
             else if (cmd == Protocol_MasterSlave.TRY_TO_SHOW_CONTAINER)
             {
                 if (master_error != Bioconverter.NO_MASTER_ERROR ||
-                    slave_error != Bioconverter.NO_SLAVE_ERROR)
+                    slave_error != Bioconverter.NO_SYSTEM_ERROR)
                 {
                     errordialog.title = "TRY_TO_SHOW_CONTAINER command error"
                     errortext.text = "\n";
@@ -196,7 +196,7 @@ ColumnLayout {
             else if (cmd == Protocol_MasterSlave.SHOW_CONTAINER_GO_BACK)
             {
                 if (master_error != Bioconverter.NO_MASTER_ERROR ||
-                    slave_error != Bioconverter.NO_SLAVE_ERROR)
+                    slave_error != Bioconverter.NO_SYSTEM_ERROR)
                 {
                     errordialog.title = "SHOW_CONTAINER_GO_BACK command error"
                     errortext.text = "\n";
@@ -216,7 +216,7 @@ ColumnLayout {
                      cmd == Protocol_MasterSlave.GET_TAGS_NUMBER_AND_POSITION_18TO23)
             {
                 if (master_error != Bioconverter.NO_MASTER_ERROR ||
-                    slave_error != Bioconverter.NO_SLAVE_ERROR)
+                    slave_error != Bioconverter.NO_SYSTEM_ERROR)
                 {
                     errordialog.title = "GET_TAGS_NUMBER_AND_POSITION command error"
                     errortext.text = "\n";

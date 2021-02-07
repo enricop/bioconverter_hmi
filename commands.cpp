@@ -36,11 +36,19 @@ int Get_System_Info_1::slaveResponse(const QByteArray &input, QList<QVariant> &o
 		positionToProcess = p;
 		Q_EMIT positionToProcessChanged();
 	}
-	const auto fu = static_cast<Function>(input.at(4) << 8 | input.at(5));
-	if (fu != functionInProgress) {
-		functionInProgress = fu;
-		Q_EMIT functionInProgressChanged();
-	}
+
+	const auto fu_hi = static_cast<std::uint8_t>(input.at(4));
+	function1InProgress = static_cast<Function1>(fu_hi & 0xF0);
+	Q_EMIT function1InProgressChanged();
+	function2InProgress = static_cast<Function2>(fu_hi & 0x0F);
+	Q_EMIT function2InProgressChanged();
+
+	const auto fu_low = static_cast<std::uint8_t>(input.at(5));
+	function3InProgress = static_cast<Function3>(fu_low & 0xF0);
+	Q_EMIT function3InProgressChanged();
+	function4InProgress = static_cast<Function4>(fu_low & 0x0F);
+	Q_EMIT function4InProgressChanged();
+
 	const auto e = static_cast<SlaveError>(input.at(6));
 	if (e != errorOccurred) {
 		errorOccurred = e;
@@ -51,7 +59,10 @@ int Get_System_Info_1::slaveResponse(const QByteArray &input, QList<QVariant> &o
 			   QVariant::fromValue(action),
 			   QVariant::fromValue(foodAvailable),
 			   positionToProcess,
-			   QVariant::fromValue(functionInProgress),
+			   QVariant::fromValue(function1InProgress),
+			   QVariant::fromValue(function2InProgress),
+			   QVariant::fromValue(function3InProgress),
+			   QVariant::fromValue(function4InProgress),
 			   QVariant::fromValue(errorOccurred) };
 	return 0;
 }

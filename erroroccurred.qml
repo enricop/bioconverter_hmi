@@ -48,7 +48,7 @@ ColumnLayout {
             if (cmd == Protocol_MasterSlave.MANAGE_ERROR ||
                 cmd == Protocol_MasterSlave.MANAGE_ERROR) {
                 if (master_error != Bioconverter.NO_MASTER_ERROR ||
-                    slave_error != Bioconverter.NO_SLAVE_ERROR)
+                    slave_error != Bioconverter.NO_SYSTEM_ERROR)
                 {
                     errordialog.title = "MANAGE_ERROR or MANAGE_ERROR commands error"
                     errortext.text = "\n";
