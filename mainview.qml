@@ -13,7 +13,7 @@ Item {
         anchors.fill: parent
 
         Button {
-            Layout.alignment: Qt.AlignHCenter
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
             text: "Insert\nNew Container"
             font.bold: true
             font.pixelSize: 50
@@ -23,7 +23,7 @@ Item {
         }
 
         Button {
-            Layout.alignment: Qt.AlignHCenter
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
             text: "Containers\nInformation"
             font.bold: true
             font.pixelSize: 50
@@ -33,7 +33,6 @@ Item {
         }
 
     }
-
 
     Connections {
         enabled: (themainview.StackView.status == StackView.Active)

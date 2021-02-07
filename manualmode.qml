@@ -5,18 +5,18 @@ import QtQuick.Layouts 1.12
 import bioconverter 1.0
 
 ColumnLayout {
+    id: manualmodepage
 
-    /*
+    spacing: 5
+
     Button {
-        text: "Open Serial Port"
+        Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+        text: "Back"
+        font.pixelSize: 15
         onClicked: {
-            var ret = bio_backend.serialport.openSerialPort();
-            if (ret) {
-                listView.enabled = true;
-            }
+            manualmodepage.StackView.view.pop();
         }
     }
-    */
 
     Flickable {
         contentWidth: outputrow.width
@@ -28,9 +28,6 @@ ColumnLayout {
 
         RowLayout {
             id: outputrow
-            Label {
-                text: bio_backend.serialport.controlOutput
-            }
             Label {
                 id: writeoutput
                 text: bio_backend.serialport.writeOutput
@@ -138,6 +135,7 @@ ColumnLayout {
             enabled: true
 
             width: parent.width
+            height: parent.height
 
             model: commands
 
@@ -145,21 +143,19 @@ ColumnLayout {
 
                 property var param: []
 
-                contentItem: Rectangle {
-                    RowLayout {
-                        anchors.fill: parent
-                        Button {
-                            text: "Command: " + name
-                            onClicked: {
-                                bio_backend.protocol.runCommand(cmd, param);
-                            }
+                contentItem: RowLayout {
+                    anchors.fill: parent
+                    Button {
+                        text: "Command: " + name
+                        onClicked: {
+                            bio_backend.protocol.runCommand(cmd, param);
                         }
-                        TextField {
-                            visible: hasparams
-                            text: param.toString();
-                            onEditingFinished: {
-                                param = text.split(',');
-                            }
+                    }
+                    TextField {
+                        visible: hasparams
+                        text: param.toString();
+                        onEditingFinished: {
+                            param = text.split(',');
                         }
                     }
                 }
