@@ -9,6 +9,8 @@ ToolBar {
 
     property int labelsize: 18
 
+    property alias pollingenabled: getinfotimer.running
+
     ColumnLayout {
         anchors.fill: parent
 
@@ -21,7 +23,7 @@ ToolBar {
             ToolButton {
                 Layout.alignment: Qt.AlignVCenter
                 Layout.fillWidth: true
-                text: "Status:\n" + bio_backend.protocol.systeminfo1.status
+                text: "Status:\n" + bio_backend.protocol.systeminfo1.statusStr
                 font.bold: true
                 font.pixelSize: labelsize
             }
@@ -68,7 +70,7 @@ ToolBar {
         id: getinfotimer
         interval: 5000
         repeat: true
-        running: thestackview.enabled
+        running: false
         triggeredOnStart: false
         onTriggered: {
             bio_backend.protocol.runCommand(Protocol_MasterSlave.GET_SYSTEM_INFO_1, []);

@@ -119,7 +119,17 @@ ColumnLayout {
                 text: "Show Container"
                 font.pixelSize: 30
                 onClicked: {
-                    //thecontainersinfo.StackView.view.pop();
+                    bio_backend.protocol.runCommand(Protocol_MasterSlave.TRY_TO_SHOW_CONTAINER, [thetag]);
+                }
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+            }
+            Button {
+                id: gobackbutton
+                enabled: false
+                text: "Container Go Back"
+                font.pixelSize: 30
+                onClicked: {
+                    bio_backend.protocol.runCommand(Protocol_MasterSlave.SHOW_CONTAINER_GO_BACK, []);
                 }
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
             }
@@ -159,6 +169,34 @@ ColumnLayout {
                     return;
                 }
                 bio_backend.protocol.runCommand(Protocol_MasterSlave.GET_TAGS_NUMBER_AND_POSITION_0TO5, []);
+            }
+            else if (cmd == Protocol_MasterSlave.TRY_TO_SHOW_CONTAINER)
+            {
+                if (master_error != Bioconverter.NO_MASTER_ERROR ||
+                    slave_error != Bioconverter.NO_SLAVE_ERROR)
+                {
+                    errordialog.title = "TRY_TO_SHOW_CONTAINER command error"
+                    errortext.text = "\n";
+                    errortext.text = errortext.text.concat("\nmaster_error: ", master_error);
+                    errortext.text = errortext.text.concat("\nslave_error: ", slave_error);
+                    errordialog.open();
+                    return;
+                }
+                gobackbutton.enabled = true;
+            }
+            else if (cmd == Protocol_MasterSlave.SHOW_CONTAINER_GO_BACK)
+            {
+                if (master_error != Bioconverter.NO_MASTER_ERROR ||
+                    slave_error != Bioconverter.NO_SLAVE_ERROR)
+                {
+                    errordialog.title = "SHOW_CONTAINER_GO_BACK command error"
+                    errortext.text = "\n";
+                    errortext.text = errortext.text.concat("\nmaster_error: ", master_error);
+                    errortext.text = errortext.text.concat("\nslave_error: ", slave_error);
+                    errordialog.open();
+                    return;
+                }
+                gobackbutton.enabled = false;
             }
             else if (cmd == Protocol_MasterSlave.GET_TAGS_NUMBER_AND_POSITION_0TO5 ||
                      cmd == Protocol_MasterSlave.GET_TAGS_NUMBER_AND_POSITION_6TO11 ||

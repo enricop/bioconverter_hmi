@@ -36,7 +36,8 @@ class Get_System_Info_1 : public QObject,  public Command
 	QML_NAMED_ELEMENT(Get_System_Info_1)
 	QML_UNCREATABLE("Get_System_Info_1 is always a named property of protocol")
 
-	Q_PROPERTY(QString status READ getStatus NOTIFY statusChanged)
+	Q_PROPERTY(Status status READ getStatus NOTIFY statusChanged)
+	Q_PROPERTY(QString statusStr READ getStatusStr NOTIFY statusChanged)
 	Q_PROPERTY(QString action READ getAction NOTIFY actionChanged)
 	Q_PROPERTY(QString foodAvailable READ getFoodAvailable NOTIFY foodAvailableChanged)
 	Q_PROPERTY(int positionToProcess READ getPositionToProcess NOTIFY positionToProcessChanged)
@@ -109,7 +110,8 @@ public:
 	virtual int slaveResponse(const QByteArray &input, QList<QVariant> &output) override;
 
 private:
-	QString getStatus() { return QMetaEnum::fromType<Status>().valueToKey(static_cast<int>(status)); };
+	Status getStatus() { return status; };
+	QString getStatusStr() { return QMetaEnum::fromType<Status>().valueToKey(static_cast<int>(status)); };
 	QString getAction() { return QMetaEnum::fromType<Action>().valueToKey(static_cast<int>(action)); };
 	QString getFoodAvailable() { return QMetaEnum::fromType<FoodAvailable>().valueToKey(static_cast<int>(foodAvailable)); };
 	unsigned int getPositionToProcess() { return positionToProcess; };

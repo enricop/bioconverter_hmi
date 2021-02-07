@@ -21,7 +21,10 @@ ColumnLayout {
         Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
         text: "Close Serial Port"
         onClicked: {
-            bio_backend.serialport.closeSerialPort();
+            var ret = bio_backend.serialport.closeSerialPort();
+            if (ret) {
+                theheader.pollingenabled = false;
+            }
         }
     }
 
@@ -29,7 +32,10 @@ ColumnLayout {
         Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
         text: "Open Serial Port"
         onClicked: {
-            bio_backend.serialport.openSerialPort();
+            var ret = bio_backend.serialport.openSerialPort();
+            if (ret) {
+                theheader.pollingenabled = true;
+            }
         }
     }
 

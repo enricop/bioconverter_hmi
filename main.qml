@@ -16,7 +16,7 @@ ApplicationWindow {
         Component.onCompleted: {
             var ret = serialport.openSerialPort();
             if (ret) {
-                thestackview.enabled = true;
+                theheader.pollingenabled = true;
             }
         }
     }
@@ -42,18 +42,18 @@ ApplicationWindow {
     }
 
     header: Header {
-
+        id: theheader
     }
 
     StackView {
         id: thestackview
         anchors.fill: parent
         initialItem: "qrc:/mainview.qml"
-        enabled: false
+        enabled: bio_backend.protocol.systeminfo1.status != Get_System_Info_1.SYS_STS_NOT_INITIALIZED
     }
 
     footer: Footer {
-
+        id: thefooter
     }
 
     Dialog {
