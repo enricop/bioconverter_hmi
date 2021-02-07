@@ -82,6 +82,10 @@ ToolBar {
         target: bio_backend.protocol
         function onCommandResult(cmd, master_error, proto_output, slave_error) {
             if (cmd == Protocol_MasterSlave.GET_SYSTEM_INFO_1) {
+                if (master_error == Bioconverter.EXECUTING_OTHER_COMMAND) {
+                    return;
+                }
+
                 if (master_error != Bioconverter.NO_MASTER_ERROR ||
                     slave_error != Bioconverter.NO_SLAVE_ERROR)
                 {

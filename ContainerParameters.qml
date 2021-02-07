@@ -79,7 +79,7 @@ ColumnLayout {
                 font.pixelSize: labelsfontsize
             }
             Label {
-                text: foodcycletime.getDate()-1 + " days - " + foodcycletime.getHours() + " hours : " + foodcycletime.getMinutes() + " mins";
+                text: foodcycletime.getUTCDate()-1 + " days - " + foodcycletime.getUTCHours() + " hours : " + foodcycletime.getUTCMinutes() + " mins";
                 font.pixelSize: labelsfontsize
             }
 
@@ -97,7 +97,7 @@ ColumnLayout {
                 font.pixelSize: labelsfontsize
             }
             Label {
-                text: remainingfoodcycletime.getDate()-1 + " days - " + remainingfoodcycletime.getHours() + " hours : " + remainingfoodcycletime.getMinutes() + " mins";
+                text: remainingfoodcycletime.getUTCDate()-1 + " days - " + remainingfoodcycletime.getUTCHours() + " hours : " + remainingfoodcycletime.getUTCMinutes() + " mins";
                 font.pixelSize: labelsfontsize
             }
 

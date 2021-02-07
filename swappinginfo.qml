@@ -28,9 +28,9 @@ ColumnLayout {
             font.pixelSize: labelsfontsize
         }
         Label {
-            text: bio_backend.protocol.systeminfo2.swapCycleTime.getDate()-1 + " days - " +
-                  bio_backend.protocol.systeminfo2.swapCycleTime.getHours() + " hours : " +
-                  bio_backend.protocol.systeminfo2.swapCycleTime.getMinutes() + " min";
+            text: bio_backend.protocol.systeminfo2.swapCycleTime.getUTCDate()-1 + " days - " +
+                  bio_backend.protocol.systeminfo2.swapCycleTime.getUTCHours() + " hours : " +
+                  bio_backend.protocol.systeminfo2.swapCycleTime.getUTCMinutes() + " min";
             font.pixelSize: labelsfontsize
         }
 
@@ -39,9 +39,9 @@ ColumnLayout {
             font.pixelSize: labelsfontsize
         }
         Label {
-            text: bio_backend.protocol.systeminfo2.remainingSwapCycleTime.getDate()-1 + " days - " +
-                  bio_backend.protocol.systeminfo2.remainingSwapCycleTime.getHours() + " hours : " +
-                  bio_backend.protocol.systeminfo2.remainingSwapCycleTime.getMinutes() + " min";
+            text: bio_backend.protocol.systeminfo2.remainingSwapCycleTime.getUTCDate()-1 + " days - " +
+                  bio_backend.protocol.systeminfo2.remainingSwapCycleTime.getUTCHours() + " hours : " +
+                  bio_backend.protocol.systeminfo2.remainingSwapCycleTime.getUTCMinutes() + " min";
             font.pixelSize: labelsfontsize
         }
 

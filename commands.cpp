@@ -70,10 +70,10 @@ int Get_System_Info_2::slaveResponse(const QByteArray &input, QList<QVariant> &o
 	if (input.size() != 7)
 		return -1;
 
-	swapCycleTime = QTime::fromMSecsSinceStartOfDay(static_cast<int>(input.at(0))*60*60*1000);
+	swapCycleTime = QDateTime::fromSecsSinceEpoch(static_cast<std::uint8_t>(input.at(0))*60*60, Qt::UTC);
 	Q_EMIT swapCycleTimeChanged();
 
-	remainingSwapCycleTime = QTime::fromMSecsSinceStartOfDay(static_cast<int>(input.at(1) << 8 | input.at(2))*60*1000);
+	remainingSwapCycleTime = QDateTime::fromSecsSinceEpoch(static_cast<std::uint16_t>(input.at(1) << 8 | input.at(2))*60, Qt::UTC);
 	Q_EMIT remainingSwapCycleTimeChanged();
 
 	output = { swapCycleTime, remainingSwapCycleTime };
@@ -308,15 +308,17 @@ int Get_Single_Container_Parameters1_By_Pos::slaveResponse(const QByteArray &inp
 	containers.at(pos)->setStatus(static_cast<Container_Parameters1::Status>(input.at(1)));
 	containers.at(pos)->setFoodtype(static_cast<int>(input.at(2)));
 	containers.at(pos)->setFoodquantity(static_cast<int>(input.at(3)));
-	containers.at(pos)->setFoodcycletime(QTime::fromMSecsSinceStartOfDay(static_cast<int>(input.at(4))*60*60*1000));
+	containers.at(pos)->setFoodcycletime(QDateTime::fromSecsSinceEpoch(static_cast<std::uint8_t>(input.at(4))*60*60, Qt::UTC));
 	containers.at(pos)->setFoodcycles(static_cast<int>(input.at(5)));
+
+	qDebug() << "cycletime:" << static_cast<std::uint8_t>(input.at(4));
 
 	output = {
 		pos,
 		QVariant::fromValue(static_cast<Container_Parameters1::Status>(input.at(1))),
 		static_cast<int>(input.at(2)),
 		static_cast<int>(input.at(3)),
-		QTime::fromMSecsSinceStartOfDay(static_cast<int>(input.at(4))*60*60*1000),
+		QDateTime::fromSecsSinceEpoch(static_cast<std::uint8_t>(input.at(4))*60*60, Qt::UTC),
 		static_cast<int>(input.at(5))
 	};
 
@@ -352,14 +354,15 @@ int Get_Single_Container_Parameters2_By_Pos::slaveResponse(const QByteArray &inp
 		return -2;
 	}
 
-	const auto rmntime = static_cast<int>(input.at(1) << 8 | input.at(2));
+	const auto rmntime = static_cast<std::uint16_t>(input.at(1) << 8 | input.at(2));
+	qDebug() << "rmntime:" << rmntime;
 
-	containers.at(pos)->setRemainingfoodcycletime(QTime::fromMSecsSinceStartOfDay(rmntime*60*1000));
+	containers.at(pos)->setRemainingfoodcycletime(QDateTime::fromSecsSinceEpoch(rmntime*60, Qt::UTC));
 	containers.at(pos)->setRemainingfoodcycles(static_cast<int>(input.at(3)));
 
 	output = {
 		pos,
-		QTime::fromMSecsSinceStartOfDay(rmntime*60*1000),
+		QDateTime::fromSecsSinceEpoch(rmntime*60, Qt::UTC),
 		static_cast<int>(input.at(3))
 	};
 

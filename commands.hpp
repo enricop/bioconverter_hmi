@@ -4,7 +4,7 @@
 #include <QVariantList>
 #include <QByteArray>
 #include <QObject>
-#include <QTime>
+#include <QDateTime>
 #include <QMetaEnum>
 
 #include <qqml.h>
@@ -144,8 +144,8 @@ class Get_System_Info_2 : public QObject,  public Command
 	QML_NAMED_ELEMENT(Get_System_Info_2)
 	QML_UNCREATABLE("Get_System_Info_2 is always a named property of protocol")
 
-	Q_PROPERTY(QTime swapCycleTime READ getSwapCycleTime NOTIFY swapCycleTimeChanged)
-	Q_PROPERTY(QTime remainingSwapCycleTime READ getRemainingSwapCycleTime NOTIFY remainingSwapCycleTimeChanged)
+	Q_PROPERTY(QDateTime swapCycleTime READ getSwapCycleTime NOTIFY swapCycleTimeChanged)
+	Q_PROPERTY(QDateTime remainingSwapCycleTime READ getRemainingSwapCycleTime NOTIFY remainingSwapCycleTimeChanged)
 
 public:
 	explicit Get_System_Info_2(QObject *parent = nullptr) :
@@ -158,16 +158,16 @@ public:
 	virtual int slaveResponse(const QByteArray &input, QList<QVariant> &output) override;
 
 private:
-	QTime getSwapCycleTime() { return swapCycleTime; };
-	QTime getRemainingSwapCycleTime() { return remainingSwapCycleTime; };
+	QDateTime getSwapCycleTime() { return swapCycleTime; };
+	QDateTime getRemainingSwapCycleTime() { return remainingSwapCycleTime; };
 
 Q_SIGNALS:
 	void swapCycleTimeChanged();
 	void remainingSwapCycleTimeChanged();
 
 private:
-	QTime swapCycleTime;
-	QTime remainingSwapCycleTime;
+	QDateTime swapCycleTime;
+	QDateTime remainingSwapCycleTime;
 };
 
 class Get_Tags_Number_And_Position_0To5 : public QObject,  public Command
@@ -392,7 +392,7 @@ class Container_Parameters1 : public QObject
 	Q_PROPERTY(Status status READ getStatus NOTIFY statusChanged)
 	Q_PROPERTY(int foodtype READ getFoodtype NOTIFY foodtypeChanged)
 	Q_PROPERTY(int foodquantity READ getFoodquantity NOTIFY foodquantityChanged)
-	Q_PROPERTY(QTime foodcycletime READ getFoodcycletime NOTIFY foodcycletimeChanged)
+	Q_PROPERTY(QDateTime foodcycletime READ getFoodcycletime NOTIFY foodcycletimeChanged)
 	Q_PROPERTY(int foodcycles READ getFoodcycles NOTIFY foodcyclesChanged)
 
 public:
@@ -430,7 +430,7 @@ public:
 			Q_EMIT foodquantityChanged();
 		}
 	}
-	void setFoodcycletime(QTime newfoodcycletime) {
+	void setFoodcycletime(QDateTime newfoodcycletime) {
 		if (newfoodcycletime != foodcycletime) {
 			foodcycletime = newfoodcycletime;
 			Q_EMIT foodcycletimeChanged();
@@ -454,13 +454,13 @@ private:
 	Status getStatus() { return status; };
 	int getFoodtype() { return foodtype; };
 	int getFoodquantity() { return foodquantity; };
-	QTime getFoodcycletime() { return foodcycletime; };
+	QDateTime getFoodcycletime() { return foodcycletime; };
 	int getFoodcycles() { return foodcycles; };
 
 	Status status;
 	int foodtype;
 	int foodquantity;
-	QTime foodcycletime;
+	QDateTime foodcycletime;
 	int foodcycles;
 };
 
@@ -500,7 +500,7 @@ class Container_Parameters2 : public QObject
 	QML_NAMED_ELEMENT(Container_Parameters2)
 	QML_UNCREATABLE("Container_Parameters2 is always a named property of Get_Single_Container_Parameters2_By_Pos")
 
-	Q_PROPERTY(QTime remainingfoodcycletime READ getRemainingfoodcycletime NOTIFY remainingfoodcycletimeChanged)
+	Q_PROPERTY(QDateTime remainingfoodcycletime READ getRemainingfoodcycletime NOTIFY remainingfoodcycletimeChanged)
 	Q_PROPERTY(int remainingfoodcycles READ getRemainingfoodcycles NOTIFY remainingfoodcyclesChanged)
 
 public:
@@ -517,7 +517,7 @@ public:
 	};
 	Q_ENUM(Status)
 
-	void setRemainingfoodcycletime(QTime newremainingfoodcycletime) {
+	void setRemainingfoodcycletime(QDateTime newremainingfoodcycletime) {
 		if (newremainingfoodcycletime != remainingfoodcycletime) {
 			remainingfoodcycletime = newremainingfoodcycletime;
 			Q_EMIT remainingfoodcycletimeChanged();
@@ -535,10 +535,10 @@ Q_SIGNALS:
 	void remainingfoodcyclesChanged();
 
 private:
-	QTime getRemainingfoodcycletime() { return remainingfoodcycletime; };
+	QDateTime getRemainingfoodcycletime() { return remainingfoodcycletime; };
 	int getRemainingfoodcycles() { return remainingfoodcycles; };
 
-	QTime remainingfoodcycletime;
+	QDateTime remainingfoodcycletime;
 	int remainingfoodcycles;
 };
 
