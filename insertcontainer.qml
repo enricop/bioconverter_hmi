@@ -51,6 +51,7 @@ Item {
                 id: foodquantityslider
                 model: 256
                 Layout.alignment: Qt.AlignHCenter
+                wrap: false
             }
             Label {
                 text: foodquantityslider.currentIndex
@@ -91,6 +92,7 @@ Item {
                 id: foodtimeslider
                 model: 256
                 Layout.alignment: Qt.AlignHCenter
+                wrap: false
             }
             Label {
                 text: foodtimeslider.currentIndex
@@ -127,8 +129,8 @@ Item {
                                                     [1,
                                                      foodtypeslider.value,
                                                      foodquantityslider.currentIndex,
-                                                     foodcyclesslider.value,
-                                                     foodtimeslider.currentIndex]);
+                                                     foodtimeslider.currentIndex,
+                                                     foodcyclesslider.value]);
                 }
                 Layout.alignment: Qt.AlignHCenter
             }

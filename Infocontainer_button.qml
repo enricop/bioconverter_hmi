@@ -96,7 +96,9 @@ ItemDelegate {
                                                         foodcycletime: bio_backend.protocol.contp1.containers[pos].foodcycletime,
                                                         foodcycles: bio_backend.protocol.contp1.containers[pos].foodcycles,
                                                         remainingfoodcycletime: bio_backend.protocol.contp2.containers[pos].remainingfoodcycletime,
-                                                        remainingfoodcycles: bio_backend.protocol.contp2.containers[pos].remainingfoodcycles
+                                                        remainingfoodcycles: bio_backend.protocol.contp2.containers[pos].remainingfoodcycles,
+
+                                                        thetag: tag,
                                                     });
                 }
             }

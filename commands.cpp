@@ -316,7 +316,7 @@ int Get_Single_Container_Parameters1_By_Pos::slaveResponse(const QByteArray &inp
 	containers.at(pos)->setStatus(static_cast<Container_Parameters1::Status>(input.at(1)));
 	containers.at(pos)->setFoodtype(static_cast<int>(input.at(2)));
 	containers.at(pos)->setFoodquantity(static_cast<int>(input.at(3)));
-	containers.at(pos)->setFoodcycletime(QTime(static_cast<int>(input.at(4)), 0));
+	containers.at(pos)->setFoodcycletime(QTime::fromMSecsSinceStartOfDay(static_cast<int>(input.at(4))*60*60*1000));
 	containers.at(pos)->setFoodcycles(static_cast<int>(input.at(5)));
 
 	output = {
@@ -324,7 +324,7 @@ int Get_Single_Container_Parameters1_By_Pos::slaveResponse(const QByteArray &inp
 		QVariant::fromValue(static_cast<Container_Parameters1::Status>(input.at(1))),
 		static_cast<int>(input.at(2)),
 		static_cast<int>(input.at(3)),
-		QTime(static_cast<int>(input.at(4)), 0),
+		QTime::fromMSecsSinceStartOfDay(static_cast<int>(input.at(4))*60*60*1000),
 		static_cast<int>(input.at(5))
 	};
 
@@ -362,12 +362,12 @@ int Get_Single_Container_Parameters2_By_Pos::slaveResponse(const QByteArray &inp
 
 	const auto rmntime = static_cast<int>(input.at(1) << 8 | input.at(2));
 
-	containers.at(pos)->setRemainingfoodcycletime(QTime(0, rmntime));
+	containers.at(pos)->setRemainingfoodcycletime(QTime::fromMSecsSinceStartOfDay(rmntime*60*1000));
 	containers.at(pos)->setRemainingfoodcycles(static_cast<int>(input.at(3)));
 
 	output = {
 		pos,
-		QTime(0, rmntime),
+		QTime::fromMSecsSinceStartOfDay(rmntime*60*1000),
 		static_cast<int>(input.at(3))
 	};
 
@@ -566,9 +566,13 @@ int Cancel_Container_By_Tag::slaveResponse(const QByteArray &input, QList<QVaria
 		return -1;
 
 	const auto tag = static_cast<int>(input.at(0));
+	/* slave does not return the TAG * /
 	if (tag < TAG_MIN || tag > TAG_MAX) {
 		return -2;
 	}
+	*/
+	if (tag != 0)
+		return -2;
 
 	output = { tag };
 	return 0;
