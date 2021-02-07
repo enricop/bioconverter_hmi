@@ -14,5 +14,6 @@
         <file>serialmng.qml</file>
         <file>swappinginfo.qml</file>
         <file>about.qml</file>
+        <file>otheroptions.qml</file>
     </qresource>
 </RCC>

@@ -34,6 +34,7 @@ ApplicationWindow {
             title: qsTr("&Advanced")
             Action { text: qsTr("&Manual Mode"); onTriggered: thestackview.push("qrc:/manualmode.qml"); }
             Action { text: qsTr("&Manage Serial Port"); onTriggered: thestackview.push("qrc:/serialmng.qml"); }
+            Action { text: qsTr("&Other Options"); onTriggered: thestackview.push("qrc:/otheroptions.qml"); }
         }
         Menu {
             title: qsTr("&Help")

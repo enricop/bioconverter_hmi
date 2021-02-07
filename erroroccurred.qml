@@ -20,7 +20,7 @@ ColumnLayout {
         Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
         font.bold: true
         font.pixelSize: 25
-        text: bio_backend.protocol.systeminfo1.errorOccurred
+        text: bio_backend.protocol.systeminfo1.errorOccurredStr
     }
 
     Button {

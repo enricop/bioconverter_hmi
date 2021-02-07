@@ -101,9 +101,9 @@ ToolBar {
     }
 
     Connections {
-        enabled: theheader === visible && getinfotimer.running
         target: bio_backend.protocol.systeminfo1
         function onErrorOccurredChanged() {
+            console.log("ErrorOccurred: ", bio_backend.protocol.systeminfo1.errorOccurred);
             if (bio_backend.protocol.systeminfo1.errorOccurred == Bioconverter.NO_SLAVE_ERROR)
                 return;
 

@@ -85,8 +85,8 @@ public:
 	Q_ENUM(FoodAvailable);
 
 	enum class Function {
-
 		FUNCTION_NO_RUN										= 0x0000,
+		FUNCTION_NOT_INITIALIZED							= 0x00FF,
 
 		FUNCTION_REFILL_CONTAINER   						= 0x1000, //functionInProgress_H  High bits
 		FUNCTION_MOVE_CONTAINER_FROM_FLOOR_TO_EXIT          = 0x2000, //functionInProgress_H  High bits
@@ -656,6 +656,15 @@ class Cancel_Container_By_Tag : public Command
 {
 public:
 	explicit Cancel_Container_By_Tag() { }
+
+	virtual int masterCommand(const QList<QVariant> &input, QByteArray &output) const override;
+	virtual int slaveResponse(const QByteArray &input, QList<QVariant> &output) override;
+};
+
+class Abort_Manual_Action : public Command
+{
+public:
+	explicit Abort_Manual_Action() { }
 
 	virtual int masterCommand(const QList<QVariant> &input, QByteArray &output) const override;
 	virtual int slaveResponse(const QByteArray &input, QList<QVariant> &output) override;

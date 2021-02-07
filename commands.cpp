@@ -591,4 +591,22 @@ int Cancel_Container_By_Tag::slaveResponse(const QByteArray &input, QList<QVaria
 	return 0;
 }
 
+int Abort_Manual_Action::masterCommand(const QList<QVariant> &input, QByteArray &output) const
+{
+	Q_UNUSED(input);
+
+	output.append(7, 0x0);
+
+	return 0;
+}
+
+int Abort_Manual_Action::slaveResponse(const QByteArray &input, QList<QVariant> &output)
+{
+	if (input.size() != 7)
+		return -1;
+
+	output = {};
+	return 0;
+}
+
 }

@@ -116,7 +116,7 @@ Item {
                 text: "Back"
                 font.pixelSize: 30
                 onClicked: {
-                    theinsertcontainerpage.StackView.view.pop();
+                    bio_backend.protocol.runCommand(Protocol_MasterSlave.ABORT_MANUAL_ACTION, []);
                 }
                 Layout.alignment: Qt.AlignHCenter
             }
@@ -133,6 +133,26 @@ Item {
                                                      foodcyclesslider.value]);
                 }
                 Layout.alignment: Qt.AlignHCenter
+            }
+        }
+    }
+
+    Connections {
+        enabled: (theinsertcontainerpage.StackView.status == StackView.Active)
+        target: bio_backend.protocol
+        function onCommandResult(cmd, master_error, proto_output, slave_error) {
+            if (cmd == Protocol_MasterSlave.ABORT_MANUAL_ACTION) {
+                if (master_error != Bioconverter.NO_MASTER_ERROR ||
+                    slave_error != Bioconverter.NO_SLAVE_ERROR)
+                {
+                    errordialog.title = "CANCEL_CONTAINER_BY_TAG command error"
+                    errortext.text = "\n";
+                    errortext.text = errortext.text.concat("\nmaster_error: ", master_error);
+                    errortext.text = errortext.text.concat("\nslave_error: ", slave_error);
+                    errordialog.open();
+                    return;
+                }
+                theinsertcontainerpage.StackView.view.pop();
             }
         }
     }

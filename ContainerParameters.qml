@@ -28,6 +28,9 @@ ColumnLayout {
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
             columns: 2
 
+            rowSpacing: 15
+            columnSpacing: 15
+
             Label {
                 text: "Tag:"
                 font.pixelSize: labelsfontsize
@@ -113,9 +116,10 @@ ColumnLayout {
         }
 
         ColumnLayout {
-            spacing: 15
+            spacing: 25
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
             Button {
+                id: showbutton
                 text: "Show Container"
                 font.pixelSize: 30
                 onClicked: {
@@ -134,6 +138,7 @@ ColumnLayout {
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
             }
             Button {
+                id: deletebutton
                 text: "Delete Container"
                 font.pixelSize: 30
                 onClicked: {
@@ -145,6 +150,7 @@ ColumnLayout {
     }
 
     Button {
+        id: backbutton
         Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
         text: "Back"
         font.pixelSize: 30
@@ -183,6 +189,9 @@ ColumnLayout {
                     return;
                 }
                 gobackbutton.enabled = true;
+                showbutton.enabled = false;
+                backbutton.enabled = false;
+                deletebutton.enabled = false;
             }
             else if (cmd == Protocol_MasterSlave.SHOW_CONTAINER_GO_BACK)
             {
@@ -197,6 +206,9 @@ ColumnLayout {
                     return;
                 }
                 gobackbutton.enabled = false;
+                showbutton.enabled = true;
+                backbutton.enabled = true;
+                deletebutton.enabled = true;
             }
             else if (cmd == Protocol_MasterSlave.GET_TAGS_NUMBER_AND_POSITION_0TO5 ||
                      cmd == Protocol_MasterSlave.GET_TAGS_NUMBER_AND_POSITION_6TO11 ||
