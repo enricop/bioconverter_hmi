@@ -88,9 +88,9 @@ int Get_System_Info_2::slaveResponse(const QByteArray &input, QList<QVariant> &o
 	}
 	Q_EMIT swapCycleTimeChanged();
 
-	const auto remainswaptime = static_cast<std::uint16_t>(input.at(1) << 8 | input.at(2));
-	swapCycleTime = QDateTime();
-	if (remainswaptime != 0xFF) {
+	const auto remainswaptime = static_cast<std::uint16_t>(static_cast<std::uint8_t>(input.at(1)) << 8 | static_cast<std::uint8_t>(input.at(2)));
+	remainingSwapCycleTime = QDateTime();
+	if (remainswaptime != 0x00FF) {
 		remainingSwapCycleTime = QDateTime::fromSecsSinceEpoch(remainswaptime*60, Qt::UTC);
 	}
 	Q_EMIT remainingSwapCycleTimeChanged();
@@ -380,7 +380,7 @@ int Get_Single_Container_Parameters2_By_Pos::slaveResponse(const QByteArray &inp
 		return -2;
 	}
 
-	const auto rmntime = static_cast<std::uint16_t>(input.at(1) << 8 | input.at(2));
+	const auto rmntime = static_cast<std::uint16_t>(static_cast<std::uint8_t>(input.at(1)) << 8 | static_cast<std::uint8_t>(input.at(2)));
 	auto rmnmins = QDateTime();
 	if (rmntime != 0xFF) {
 		rmnmins = QDateTime::fromSecsSinceEpoch(rmntime*60, Qt::UTC);
