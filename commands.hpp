@@ -143,11 +143,13 @@ class Get_System_Info_2 : public QObject,  public Command
 	QML_UNCREATABLE("Get_System_Info_2 is always a named property of protocol")
 
 	Q_PROPERTY(QTime swapCycleTime READ getSwapCycleTime NOTIFY swapCycleTimeChanged)
+	Q_PROPERTY(QTime remainingSwapCycleTime READ getRemainingSwapCycleTime NOTIFY remainingSwapCycleTimeChanged)
 
 public:
 	explicit Get_System_Info_2(QObject *parent = nullptr) :
 		QObject(parent),
-		swapCycleTime{}
+		swapCycleTime{},
+		remainingSwapCycleTime{}
 	{};
 
 	virtual int masterCommand(const QList<QVariant> &input, QByteArray &output) const override;
@@ -155,12 +157,15 @@ public:
 
 private:
 	QTime getSwapCycleTime() { return swapCycleTime; };
+	QTime getRemainingSwapCycleTime() { return remainingSwapCycleTime; };
 
 Q_SIGNALS:
 	void swapCycleTimeChanged();
+	void remainingSwapCycleTimeChanged();
 
 private:
 	QTime swapCycleTime;
+	QTime remainingSwapCycleTime;
 };
 
 class Get_Tags_Number_And_Position_0To5 : public QObject,  public Command

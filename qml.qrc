@@ -12,5 +12,6 @@
         <file>ContainerParameters.qml</file>
         <file>erroroccurred.qml</file>
         <file>serialmng.qml</file>
+        <file>swappinginfo.qml</file>
     </qresource>
 </RCC>

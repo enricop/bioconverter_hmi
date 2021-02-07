@@ -70,21 +70,13 @@ int Get_System_Info_2::slaveResponse(const QByteArray &input, QList<QVariant> &o
 	if (input.size() != 7)
 		return -1;
 
-	const auto hours = static_cast<int>(input.at(0));
-	const auto minutes = static_cast<int>(input.at(1) << 8 | input.at(2));
+	swapCycleTime = QTime::fromMSecsSinceStartOfDay(static_cast<int>(input.at(0))*60*60*1000);
+	Q_EMIT swapCycleTimeChanged();
 
-	if (hours < 0 || minutes < 0) {
-		swapCycleTime = QTime{};
-		Q_EMIT swapCycleTimeChanged();
-	} else {
-		QTime t(hours, minutes);
-		if (t != swapCycleTime) {
-			swapCycleTime = t;
-			Q_EMIT swapCycleTimeChanged();
-		}
-	}
+	remainingSwapCycleTime = QTime::fromMSecsSinceStartOfDay(static_cast<int>(input.at(1) << 8 | input.at(2))*60*1000);
+	Q_EMIT remainingSwapCycleTimeChanged();
 
-	output = { swapCycleTime };
+	output = { swapCycleTime, remainingSwapCycleTime };
 	return 0;
 }
 

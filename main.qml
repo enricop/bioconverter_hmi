@@ -24,7 +24,11 @@ ApplicationWindow {
     menuBar: MenuBar {
         Menu {
             title: qsTr("&Swapping")
-            Action { text: qsTr("&Info"); onTriggered: thestackview.push("qrc:/swappinginfo.qml");  }
+            Action { text: qsTr("&Info"); onTriggered: {
+                    bio_backend.protocol.runCommand(Protocol_MasterSlave.GET_SYSTEM_INFO_2, []);
+                    thestackview.push("qrc:/swappinginfo.qml");
+                }
+            }
         }
         Menu {
             title: qsTr("&Advanced")
