@@ -120,6 +120,7 @@ ColumnLayout {
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
             Button {
                 id: showbutton
+                enabled: status !== 0
                 text: "Show Container"
                 font.pixelSize: 30
                 onClicked: {
@@ -139,6 +140,7 @@ ColumnLayout {
             }
             Button {
                 id: deletebutton
+                enabled: status !== 0
                 text: "Delete Container"
                 font.pixelSize: 30
                 onClicked: {

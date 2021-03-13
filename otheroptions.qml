@@ -45,6 +45,7 @@ ColumnLayout {
                     successtext.text = "\n";
                     successtext.text = successtext.text.concat("\MEMORY erased SUCCESSFULLY");
                     successdialog.open();
+                    theotheroptionspage.StackView.view.pop(null);
                 }
             }
         }
