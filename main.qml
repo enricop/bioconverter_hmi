@@ -46,6 +46,15 @@ ApplicationWindow {
         id: theheader
     }
 
+    Image {
+        id: mainbackground
+        source: "qrc:/assets/000.png"
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        anchors.left: parent.left
+        height: parent.height / 2
+    }
+
     StackView {
         id: thestackview
         anchors.fill: parent

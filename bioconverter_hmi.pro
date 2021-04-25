@@ -21,7 +21,8 @@ HEADERS += \
 	serialport_readerwriter.hpp \
     serialworker_bridge.hpp
 
-RESOURCES += qml.qrc
+RESOURCES += qml.qrc \
+    assets.qrc
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
 QML_IMPORT_PATH =
