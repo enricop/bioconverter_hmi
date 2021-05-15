@@ -120,7 +120,7 @@ ColumnLayout {
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
             Button {
                 id: showbutton
-                enabled: status !== 0
+                enabled: status !== 0 && !containerMoving
                 text: "Show Container"
                 font.pixelSize: 30
                 onClicked: {
@@ -130,7 +130,7 @@ ColumnLayout {
             }
             Button {
                 id: gobackbutton
-                enabled: false
+                enabled: false && !containerMoving
                 text: "Container Go Back"
                 font.pixelSize: 30
                 onClicked: {
@@ -160,6 +160,8 @@ ColumnLayout {
             thecontainerparameters.StackView.view.pop();
         }
     }
+
+    property bool containerMoving: bio_backend.protocol.systeminfo1.function1InProgress == Get_System_Info_1.SYS_STS_USER_EVENT_MANAGE
 
     Connections {
         enabled: (thecontainerparameters.StackView.status == StackView.Active)
