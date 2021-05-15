@@ -40,6 +40,8 @@ ApplicationWindow {
             title: qsTr("&Help")
             Action { text: qsTr("&About"); onTriggered: thestackview.push("qrc:/about.qml"); }
         }
+
+        enabled: bio_backend.protocol.systeminfo1.status != Get_System_Info_1.SYS_STS_NOT_INITIALIZED
     }
 
     header: Header {
@@ -53,6 +55,7 @@ ApplicationWindow {
         anchors.bottom: parent.bottom
         anchors.left: parent.left
         height: parent.height / 2
+        opacity: 0.5
     }
 
     StackView {

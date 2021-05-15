@@ -11,7 +11,8 @@ ColumnLayout {
     readonly property int labelsfontsize: 30
 
     GridLayout {
-        Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+        Layout.topMargin: 50
+        Layout.alignment: Qt.AlignHCenter
         columns: 2
 
         Label {
@@ -40,24 +41,25 @@ ColumnLayout {
     Tumbler {
         id: swaptimestumbler
         model: 256
-        Layout.alignment: Qt.AlignHCenter
+        Layout.alignment: Qt.AlignHCenter | Qt.AlignTop
         wrap: false
     }
     Label {
         text: swaptimestumbler.currentIndex
         font.pixelSize: labelsfontsize
-        Layout.alignment: Qt.AlignHCenter
+        Layout.alignment: Qt.AlignHCenter | Qt.AlignTop
         horizontalAlignment: Text.AlignHCenter
     }
     Label {
         text: "New Swap Cycle Time (Hours)"
         font.pixelSize: labelsfontsize
-        Layout.alignment: Qt.AlignHCenter
+        Layout.alignment: Qt.AlignHCenter | Qt.AlignTop
         horizontalAlignment: Text.AlignHCenter
     }
 
     RowLayout {
-        Layout.alignment: Qt.AlignHCenter
+        Layout.bottomMargin: 50
+        Layout.alignment: Qt.AlignHCenter | Qt.AlignBottom
         spacing: 30
 
         Button {

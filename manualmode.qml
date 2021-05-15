@@ -10,6 +10,7 @@ ColumnLayout {
     spacing: 5
 
     Button {
+        Layout.topMargin: 40
         Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
         text: "Back"
         font.pixelSize: 15
