@@ -120,7 +120,7 @@ ColumnLayout {
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
             Button {
                 id: showbutton
-                enabled: status !== 0 && !containerMoving
+                enabled: status !== 0 && !showrunning && !containerMoving
                 text: "Show Container"
                 font.pixelSize: 30
                 onClicked: {
@@ -130,7 +130,7 @@ ColumnLayout {
             }
             Button {
                 id: gobackbutton
-                enabled: false && !containerMoving
+                enabled: showrunning && !containerMoving
                 text: "Container Go Back"
                 font.pixelSize: 30
                 onClicked: {
@@ -161,6 +161,7 @@ ColumnLayout {
         }
     }
 
+    property bool showrunning: false
     property bool containerMoving: bio_backend.protocol.systeminfo1.function1InProgress == Get_System_Info_1.SYS_STS_USER_EVENT_MANAGE
 
     Connections {
@@ -192,8 +193,7 @@ ColumnLayout {
                     errordialog.open();
                     return;
                 }
-                gobackbutton.enabled = true;
-                showbutton.enabled = false;
+                showrunning = true;
                 backbutton.enabled = false;
                 deletebutton.enabled = false;
             }
@@ -209,8 +209,7 @@ ColumnLayout {
                     errordialog.open();
                     return;
                 }
-                gobackbutton.enabled = false;
-                showbutton.enabled = true;
+                showrunning = false;
                 backbutton.enabled = true;
                 deletebutton.enabled = true;
             }
