@@ -31,6 +31,7 @@ Protocol_MasterSlave::Protocol_MasterSlave(const std::shared_ptr<SerialPort_Read
 	protocol_commands.emplace(CommandName::MANAGE_ERROR, std::make_unique<Manage_Error>());
 	protocol_commands.emplace(CommandName::DELETE_ALL_ERRORS, std::make_unique<Delete_All_Errors>());
 	protocol_commands.emplace(CommandName::ABORT_MANUAL_ACTION, std::make_unique<Abort_Manual_Action>());
+	protocol_commands.emplace(CommandName::SET_SYSTEM_PARAMETERS, std::make_unique<Set_System_Parameters>());
 
 	QObject::connect(sp.get(), &SerialPort_ReaderWriter::dataRead,
 					 this, &Protocol_MasterSlave::serialDataHandler,

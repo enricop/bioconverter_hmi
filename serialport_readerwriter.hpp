@@ -86,8 +86,8 @@ private:
 	QTextStream m_writeOutput;
 	QTextStream m_controlOutput;
 
-	std::unique_ptr<QTimer> readTimer;
-	std::unique_ptr<QTimer> writeTimer;
+	const std::unique_ptr<QTimer> readTimer;
+	const std::unique_ptr<QTimer> writeTimer;
 };
 
 }

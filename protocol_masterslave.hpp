@@ -35,6 +35,7 @@ class Protocol_MasterSlave : public QObject
 	Q_PROPERTY(bioconverter::Get_Single_Container_Parameters1_By_Pos* contp1 READ contp1 CONSTANT)
 	Q_PROPERTY(bioconverter::Get_Single_Container_Parameters2_By_Pos* contp2 READ contp2 CONSTANT)
 	Q_PROPERTY(bioconverter::Set_Single_Container_Parameters* setp READ setp CONSTANT)
+	Q_PROPERTY(bioconverter::Set_System_Parameters* setsys READ setsys CONSTANT)
 
 public:
 	explicit Protocol_MasterSlave(const std::shared_ptr<SerialPort_ReaderWriter> sp,
@@ -53,6 +54,7 @@ public:
 		GET_SINGLE_CONTAINER_PARAMETERS1_BY_POS = 0x0C,
 		GET_SINGLE_CONTAINER_PARAMETERS2_BY_POS = 0x0D,
 		SET_SINGLE_CONTAINER_PARAMETERS1 = 0x32,
+		SET_SYSTEM_PARAMETERS = 0x3C,
 		CANCEL_CONTAINER_BY_TAG = 0x50,
 		ERASE_EEPROM_RESET_SYSTEM = 0x51,
 		TRY_TO_INSERT_NEW_CONTAINER = 0x64,
@@ -60,7 +62,7 @@ public:
 		SHOW_CONTAINER_GO_BACK = 0x66,
 		MANAGE_ERROR = 0x67,
 		DELETE_ALL_ERRORS = 0x68,
-		ABORT_MANUAL_ACTION = 0xEF
+		ABORT_MANUAL_ACTION = 0xEF		
 	};
 	Q_ENUM(CommandName)
 
@@ -93,6 +95,9 @@ public:
 	};
 	Set_Single_Container_Parameters* setp() {
 		return static_cast<Set_Single_Container_Parameters*>(protocol_commands.at(CommandName::SET_SINGLE_CONTAINER_PARAMETERS1).get());
+	};
+	Set_System_Parameters* setsys() {
+		return static_cast<Set_System_Parameters*>(protocol_commands.at(CommandName::SET_SYSTEM_PARAMETERS).get());
 	};
 
 public Q_SLOTS:

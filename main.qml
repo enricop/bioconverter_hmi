@@ -23,18 +23,18 @@ ApplicationWindow {
 
     menuBar: MenuBar {
         Menu {
-            title: qsTr("&Swapping")
-            Action { text: qsTr("&Info"); onTriggered: {
+            title: qsTr("&System Parameters")
+            Action { text: qsTr("&Swap Settings"); onTriggered: {
                     bio_backend.protocol.runCommand(Protocol_MasterSlave.GET_SYSTEM_INFO_2, []);
                     thestackview.push("qrc:/swappinginfo.qml");
                 }
             }
+            Action { text: qsTr("&Erase Settings"); onTriggered: thestackview.push("qrc:/otheroptions.qml"); }
         }
         Menu {
             title: qsTr("&Advanced")
-            Action { text: qsTr("&Manual Mode"); onTriggered: thestackview.push("qrc:/manualmode.qml"); }
             Action { text: qsTr("&Manage Serial Port"); onTriggered: thestackview.push("qrc:/serialmng.qml"); }
-            Action { text: qsTr("&Other Options"); onTriggered: thestackview.push("qrc:/otheroptions.qml"); }
+            Action { text: qsTr("&Manual Mode"); onTriggered: thestackview.push("qrc:/manualmode.qml"); }
         }
         Menu {
             title: qsTr("&Help")

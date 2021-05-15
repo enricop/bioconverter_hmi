@@ -620,4 +620,37 @@ int Abort_Manual_Action::slaveResponse(const QByteArray &input, QList<QVariant> 
 	return 0;
 }
 
+int Set_System_Parameters::masterCommand(const QList<QVariant> &input, QByteArray &output) const
+{
+	if (input.size() != 1)
+		return -1;
+
+	bool ok;
+	output.append(1, input.at(0).toUInt(&ok));
+
+	if (!ok)
+		return -2;
+
+	output.append(6, 0x0);
+	return 0;
+}
+
+int Set_System_Parameters::slaveResponse(const QByteArray &input, QList<QVariant> &output)
+{
+	if (input.size() != 7)
+		return -1;
+
+	const auto swap_hours = static_cast<int>(input.at(0));
+	auto swap_time = QDateTime();
+	if (swap_hours != 0xFF) {
+		swap_time = QDateTime::fromSecsSinceEpoch(swap_hours*60*60, Qt::UTC);
+	}
+
+	newSwapCycleTime = swap_time;
+	Q_EMIT newSwapCycleTimeChanged();
+
+	output = { newSwapCycleTime };
+	return 0;
+}
+
 }

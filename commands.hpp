@@ -692,7 +692,32 @@ public:
 	virtual int slaveResponse(const QByteArray &input, QList<QVariant> &output) override;
 };
 
+class Set_System_Parameters : public QObject,  public Command
+{
+	Q_OBJECT
 
+	QML_NAMED_ELEMENT(Set_System_Parameters)
+	QML_UNCREATABLE("Set_System_Parameters is always a named property of protocol")
+
+	Q_PROPERTY(QDateTime newSwapCycleTime READ getNewSwapCycleTime NOTIFY newSwapCycleTimeChanged)
+
+public:
+	explicit Set_System_Parameters(QObject *parent = nullptr) :
+		QObject(parent),
+		newSwapCycleTime{}
+	{ }
+
+	virtual int masterCommand(const QList<QVariant> &input, QByteArray &output) const override;
+	virtual int slaveResponse(const QByteArray &input, QList<QVariant> &output) override;
+
+Q_SIGNALS:
+	void newSwapCycleTimeChanged();
+
+private:
+	QDateTime getNewSwapCycleTime() { return newSwapCycleTime; }
+
+	QDateTime newSwapCycleTime;
+};
 
 }
 
