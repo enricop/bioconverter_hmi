@@ -81,12 +81,17 @@ int Get_System_Info_2::slaveResponse(const QByteArray &input, QList<QVariant> &o
 	if (input.size() != 7)
 		return -1;
 
+    qDebug() << "Get_System_Info_2 reply first byte: 0x" << +input.at(0);
+
 	const auto swaptime = static_cast<std::uint8_t>(input.at(0));
 	swapCycleTime = QDateTime();
 	if (swaptime != 0xFF) {
 		swapCycleTime = QDateTime::fromSecsSinceEpoch(swaptime*60*60, Qt::UTC);
 	}
 	Q_EMIT swapCycleTimeChanged();
+
+    qDebug() << "Get_System_Info_2 reply second byte: 0x" << static_cast<std::uint8_t>(input.at(1));
+    qDebug() << "Get_System_Info_2 reply third byte: 0x" << static_cast<std::uint8_t>(input.at(2));
 
 	const auto remainswaptime = static_cast<std::uint16_t>(static_cast<std::uint8_t>(input.at(1)) << 8 | static_cast<std::uint8_t>(input.at(2)));
 	remainingSwapCycleTime = QDateTime();
@@ -449,7 +454,7 @@ int Set_Single_Container_Parameters::slaveResponse(const QByteArray &input, QLis
 	if (input.size() != 7)
 		return -1;
 
-	const auto tag = static_cast<int>(input.at(0));
+    const auto tag = static_cast<std::uint8_t>(input.at(0));
 	if (tag < TAG_MIN || tag > TAG_MAX) {
 		return -2;
 	}
@@ -505,7 +510,7 @@ int Try_To_Show_Container::slaveResponse(const QByteArray &input, QList<QVariant
 	if (input.size() != 7)
 		return -1;
 
-	const auto tag = static_cast<int>(input.at(0));
+    const auto tag = static_cast<std::uint8_t>(input.at(0));
 	if (tag < TAG_MIN || tag > TAG_MAX) {
 		return -2;
 	}
@@ -589,7 +594,7 @@ int Cancel_Container_By_Tag::slaveResponse(const QByteArray &input, QList<QVaria
 	if (input.size() != 7)
 		return -1;
 
-	const auto tag = static_cast<int>(input.at(0));
+    const auto tag = static_cast<std::uint8_t>(input.at(0));
 	/* slave does not return the TAG * /
 	if (tag < TAG_MIN || tag > TAG_MAX) {
 		return -2;
@@ -640,7 +645,9 @@ int Set_System_Parameters::slaveResponse(const QByteArray &input, QList<QVariant
 	if (input.size() != 7)
 		return -1;
 
-	const auto swap_hours = static_cast<int>(input.at(0));
+    qDebug() << "Set_System_Parameters reply first byte: 0x" << +input.at(0);
+
+    const auto swap_hours = static_cast<std::uint8_t>(input.at(0));
 	auto swap_time = QDateTime();
 	if (swap_hours != 0xFF) {
 		swap_time = QDateTime::fromSecsSinceEpoch(swap_hours*60*60, Qt::UTC);

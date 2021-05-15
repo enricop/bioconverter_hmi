@@ -6,7 +6,7 @@ import bioconverter 1.0
 
 ColumnLayout {
     id: theswappingpage
-    spacing: 30
+    spacing: 5
 
     readonly property int labelsfontsize: 30
 

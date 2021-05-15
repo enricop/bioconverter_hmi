@@ -52,18 +52,22 @@ Item {
                 model: 256
                 Layout.alignment: Qt.AlignHCenter
                 wrap: false
+                enabled: false
+                visible: false
             }
             Label {
                 text: foodquantityslider.currentIndex
                 font.pixelSize: 25
                 Layout.alignment: Qt.AlignHCenter
                 horizontalAlignment: Text.AlignHCenter
+                visible: false
             }
             Label {
                 text: "Food\nQuantity (Units)"
                 font.pixelSize: 25
                 Layout.alignment: Qt.AlignHCenter
                 horizontalAlignment: Text.AlignHCenter
+                visible: false
             }
 
             Slider {
@@ -74,6 +78,7 @@ Item {
                 snapMode: Slider.SnapAlways
                 stepSize: 1.0
                 Layout.alignment: Qt.AlignHCenter
+                enabled: false
             }
             Label {
                 text: foodcyclesslider.value
