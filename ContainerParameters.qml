@@ -120,7 +120,7 @@ ColumnLayout {
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
             Button {
                 id: showbutton
-                enabled: status !== 0 && !showrunning && !containerMoving
+                enabled: status !== 0 && !showrunning
                 text: "Show Container"
                 font.pixelSize: 30
                 onClicked: {
@@ -130,7 +130,7 @@ ColumnLayout {
             }
             Button {
                 id: gobackbutton
-                enabled: showrunning && !containerMoving
+                enabled: showrunning && containerShown
                 text: "Container Go Back"
                 font.pixelSize: 30
                 onClicked: {
@@ -157,12 +157,16 @@ ColumnLayout {
         text: "Back"
         font.pixelSize: 30
         onClicked: {
-            thecontainerparameters.StackView.view.pop();
+            bio_backend.protocol.runCommand(Protocol_MasterSlave.GET_TAGS_NUMBER_AND_POSITION_0TO5, []);
         }
     }
 
     property bool showrunning: false
-    property bool containerMoving: bio_backend.protocol.systeminfo1.function1InProgress == Get_System_Info_1.SYS_STS_USER_EVENT_MANAGE
+    property bool containerShown:
+        (bio_backend.protocol.systeminfo1.function1InProgress == "SYS_ACTION_USER_SHOW_CONTAINER" &&
+         bio_backend.protocol.systeminfo1.function2InProgress == "NO_RUN" &&
+         bio_backend.protocol.systeminfo1.function3InProgress == "NO_RUN" &&
+         bio_backend.protocol.systeminfo1.function4InProgress == "NO_RUN")
 
     Connections {
         enabled: (thecontainerparameters.StackView.status == StackView.Active)
