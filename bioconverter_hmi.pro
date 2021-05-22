@@ -34,3 +34,5 @@ CONFIG += qmltypes
 
 QML_IMPORT_NAME = bioconverter
 QML_IMPORT_MAJOR_VERSION = 1
+
+RC_ICONS = bioapp.ico
