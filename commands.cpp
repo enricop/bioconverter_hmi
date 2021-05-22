@@ -2,18 +2,20 @@
 
 namespace bioconverter {
 
+constexpr std::uint8_t CMD_PAYLOAD_LEN { 7 };
+
 int Get_System_Info_1::masterCommand(const QList<QVariant> &input, QByteArray &output) const
 {
 	Q_UNUSED(input);
 
-	output.append(7, 0x0);
+	output.append(CMD_PAYLOAD_LEN, 0x0);
 
 	return 0;
 }
 
 int Get_System_Info_1::slaveResponse(const QByteArray &input, QList<QVariant> &output)
 {
-	if (input.size() != 7)
+	if (input.size() != CMD_PAYLOAD_LEN)
 		return -1;
 
 	const auto s = static_cast<Status>(input.at(0));
@@ -71,14 +73,14 @@ int Get_System_Info_2::masterCommand(const QList<QVariant> &input, QByteArray &o
 {
 	Q_UNUSED(input);
 
-	output.append(7, 0x0);
+	output.append(CMD_PAYLOAD_LEN, 0x0);
 
 	return 0;
 }
 
 int Get_System_Info_2::slaveResponse(const QByteArray &input, QList<QVariant> &output)
 {
-	if (input.size() != 7)
+	if (input.size() != CMD_PAYLOAD_LEN)
 		return -1;
 
     qDebug() << "Get_System_Info_2 reply first byte: 0x" << +input.at(0);
@@ -108,14 +110,14 @@ int Get_Tags_Number_And_Position_0To5::masterCommand(const QList<QVariant> &inpu
 {
 	Q_UNUSED(input);
 
-	output.append(7, 0x0);
+	output.append(CMD_PAYLOAD_LEN, 0x0);
 
 	return 0;
 }
 
 int Get_Tags_Number_And_Position_0To5::slaveResponse(const QByteArray &input, QList<QVariant> &output)
 {
-	if (input.size() != 7 || input.at(0) != 0x0)
+	if (input.size() != CMD_PAYLOAD_LEN || input.at(0) != 0x0)
 		return -1;
 
 	const auto p0 = static_cast<int>(input.at(1));
@@ -157,14 +159,14 @@ int Get_Tags_Number_And_Position_6To11::masterCommand(const QList<QVariant> &inp
 {
 	Q_UNUSED(input);
 
-	output.append(7, 0x0);
+	output.append(CMD_PAYLOAD_LEN, 0x0);
 
 	return 0;
 }
 
 int Get_Tags_Number_And_Position_6To11::slaveResponse(const QByteArray &input, QList<QVariant> &output)
 {
-	if (input.size() != 7 || input.at(0) != 0x0)
+	if (input.size() != CMD_PAYLOAD_LEN || input.at(0) != 0x0)
 		return -1;
 
 	const auto p6 = static_cast<int>(input.at(1));
@@ -206,14 +208,14 @@ int Get_Tags_Number_And_Position_12To17::masterCommand(const QList<QVariant> &in
 {
 	Q_UNUSED(input);
 
-	output.append(7, 0x0);
+	output.append(CMD_PAYLOAD_LEN, 0x0);
 
 	return 0;
 }
 
 int Get_Tags_Number_And_Position_12To17::slaveResponse(const QByteArray &input, QList<QVariant> &output)
 {
-	if (input.size() != 7 || input.at(0) != 0x0)
+	if (input.size() != CMD_PAYLOAD_LEN || input.at(0) != 0x0)
 		return -1;
 
 	const auto p12 = static_cast<int>(input.at(1));
@@ -255,14 +257,14 @@ int Get_Tags_Number_And_Position_18To23::masterCommand(const QList<QVariant> &in
 {
 	Q_UNUSED(input);
 
-	output.append(7, 0x0);
+	output.append(CMD_PAYLOAD_LEN, 0x0);
 
 	return 0;
 }
 
 int Get_Tags_Number_And_Position_18To23::slaveResponse(const QByteArray &input, QList<QVariant> &output)
 {
-	if (input.size() != 7 || input.at(0) != 0x0)
+	if (input.size() != CMD_PAYLOAD_LEN || input.at(0) != 0x0)
 		return -1;
 
 	const auto p18 = static_cast<int>(input.at(1));
@@ -321,7 +323,7 @@ int Get_Single_Container_Parameters1_By_Pos::masterCommand(const QList<QVariant>
 
 int Get_Single_Container_Parameters1_By_Pos::slaveResponse(const QByteArray &input, QList<QVariant> &output)
 {
-	if (input.size() != 7)
+	if (input.size() != CMD_PAYLOAD_LEN)
 		return -1;
 
 	const auto pos = static_cast<int>(input.at(0));
@@ -377,7 +379,7 @@ int Get_Single_Container_Parameters2_By_Pos::masterCommand(const QList<QVariant>
 
 int Get_Single_Container_Parameters2_By_Pos::slaveResponse(const QByteArray &input, QList<QVariant> &output)
 {
-	if (input.size() != 7)
+	if (input.size() != CMD_PAYLOAD_LEN)
 		return -1;
 
 	const auto pos = static_cast<int>(input.at(0));
@@ -407,14 +409,14 @@ int Try_To_Insert_New_Container::masterCommand(const QList<QVariant> &input, QBy
 {
 	Q_UNUSED(input);
 
-	output.append(7, 0x0);
+	output.append(CMD_PAYLOAD_LEN, 0x0);
 
 	return 0;
 }
 
 int Try_To_Insert_New_Container::slaveResponse(const QByteArray &input, QList<QVariant> &output)
 {
-	if (input.size() != 7)
+	if (input.size() != CMD_PAYLOAD_LEN)
 		return -1;
 
 	for (const auto b : input) {
@@ -451,7 +453,7 @@ int Set_Single_Container_Parameters::masterCommand(const QList<QVariant> &input,
 
 int Set_Single_Container_Parameters::slaveResponse(const QByteArray &input, QList<QVariant> &output)
 {
-	if (input.size() != 7)
+	if (input.size() != CMD_PAYLOAD_LEN)
 		return -1;
 
     const auto tag = static_cast<std::uint8_t>(input.at(0));
@@ -470,14 +472,14 @@ int Erase_EEPROM_Reset_System::masterCommand(const QList<QVariant> &input, QByte
 {
 	Q_UNUSED(input);
 
-	output.append(7, 0x0);
+	output.append(CMD_PAYLOAD_LEN, 0x0);
 
 	return 0;
 }
 
 int Erase_EEPROM_Reset_System::slaveResponse(const QByteArray &input, QList<QVariant> &output)
 {
-	if (input.size() != 7)
+	if (input.size() != CMD_PAYLOAD_LEN)
 		return -1;
 
 	for (const auto b : input) {
@@ -507,7 +509,7 @@ int Try_To_Show_Container::masterCommand(const QList<QVariant> &input, QByteArra
 
 int Try_To_Show_Container::slaveResponse(const QByteArray &input, QList<QVariant> &output)
 {
-	if (input.size() != 7)
+	if (input.size() != CMD_PAYLOAD_LEN)
 		return -1;
 
     const auto tag = static_cast<std::uint8_t>(input.at(0));
@@ -523,14 +525,14 @@ int Show_Container_Go_Back::masterCommand(const QList<QVariant> &input, QByteArr
 {
 	Q_UNUSED(input);
 
-	output.append(7, 0x0);
+	output.append(CMD_PAYLOAD_LEN, 0x0);
 
 	return 0;
 }
 
 int Show_Container_Go_Back::slaveResponse(const QByteArray &input, QList<QVariant> &output)
 {
-	if (input.size() != 7)
+	if (input.size() != CMD_PAYLOAD_LEN)
 		return -1;
 
 	output = {};
@@ -541,14 +543,14 @@ int Manage_Error::masterCommand(const QList<QVariant> &input, QByteArray &output
 {
 	Q_UNUSED(input);
 
-	output.append(7, 0x0);
+	output.append(CMD_PAYLOAD_LEN, 0x0);
 
 	return 0;
 }
 
 int Manage_Error::slaveResponse(const QByteArray &input, QList<QVariant> &output)
 {
-	if (input.size() != 7)
+	if (input.size() != CMD_PAYLOAD_LEN)
 		return -1;
 
 	output = {};
@@ -559,14 +561,14 @@ int Delete_All_Errors::masterCommand(const QList<QVariant> &input, QByteArray &o
 {
 	Q_UNUSED(input);
 
-	output.append(7, 0x0);
+	output.append(CMD_PAYLOAD_LEN, 0x0);
 
 	return 0;
 }
 
 int Delete_All_Errors::slaveResponse(const QByteArray &input, QList<QVariant> &output)
 {
-	if (input.size() != 7)
+	if (input.size() != CMD_PAYLOAD_LEN)
 		return -1;
 
 	output = {};
@@ -591,7 +593,7 @@ int Cancel_Container_By_Tag::masterCommand(const QList<QVariant> &input, QByteAr
 
 int Cancel_Container_By_Tag::slaveResponse(const QByteArray &input, QList<QVariant> &output)
 {
-	if (input.size() != 7)
+	if (input.size() != CMD_PAYLOAD_LEN)
 		return -1;
 
     const auto tag = static_cast<std::uint8_t>(input.at(0));
@@ -611,14 +613,14 @@ int Abort_Manual_Action::masterCommand(const QList<QVariant> &input, QByteArray 
 {
 	Q_UNUSED(input);
 
-	output.append(7, 0x0);
+	output.append(CMD_PAYLOAD_LEN, 0x0);
 
 	return 0;
 }
 
 int Abort_Manual_Action::slaveResponse(const QByteArray &input, QList<QVariant> &output)
 {
-	if (input.size() != 7)
+	if (input.size() != CMD_PAYLOAD_LEN)
 		return -1;
 
 	output = {};
@@ -642,7 +644,7 @@ int Set_System_Parameters::masterCommand(const QList<QVariant> &input, QByteArra
 
 int Set_System_Parameters::slaveResponse(const QByteArray &input, QList<QVariant> &output)
 {
-	if (input.size() != 7)
+	if (input.size() != CMD_PAYLOAD_LEN)
 		return -1;
 
     qDebug() << "Set_System_Parameters reply first byte: 0x" << +input.at(0);
@@ -657,6 +659,24 @@ int Set_System_Parameters::slaveResponse(const QByteArray &input, QList<QVariant
 	Q_EMIT newSwapCycleTimeChanged();
 
 	output = { newSwapCycleTime };
+	return 0;
+}
+
+int End_Rearing_Cycle::masterCommand(const QList<QVariant> &input, QByteArray &output) const
+{
+	Q_UNUSED(input);
+
+	output.append(CMD_PAYLOAD_LEN, 0x0);
+
+	return 0;
+}
+
+int End_Rearing_Cycle::slaveResponse(const QByteArray &input, QList<QVariant> &output)
+{
+	if (input.size() != CMD_PAYLOAD_LEN)
+		return -1;
+
+	output = {};
 	return 0;
 }
 

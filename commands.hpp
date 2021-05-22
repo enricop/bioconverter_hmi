@@ -15,9 +15,9 @@
 
 namespace bioconverter {
 
-constexpr int NUMBER_OF_POSITIONS { 24 };
-constexpr int TAG_MIN { 101 };
-constexpr int TAG_MAX { TAG_MIN + NUMBER_OF_POSITIONS };
+constexpr std::uint8_t NUMBER_OF_POSITIONS { 24 };
+constexpr std::uint8_t TAG_MIN { 101 };
+constexpr std::uint8_t TAG_MAX { TAG_MIN + NUMBER_OF_POSITIONS };
 
 class Command
 {
@@ -717,6 +717,15 @@ private:
 	QDateTime getNewSwapCycleTime() { return newSwapCycleTime; }
 
 	QDateTime newSwapCycleTime;
+};
+
+class End_Rearing_Cycle : public Command
+{
+public:
+	explicit End_Rearing_Cycle() { }
+
+	virtual int masterCommand(const QList<QVariant> &input, QByteArray &output) const override;
+	virtual int slaveResponse(const QByteArray &input, QList<QVariant> &output) override;
 };
 
 }

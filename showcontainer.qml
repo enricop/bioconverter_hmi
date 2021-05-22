@@ -120,8 +120,8 @@ ColumnLayout {
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
             Button {
                 id: showbutton
-                enabled: status !== 0 && !showrunning
-                text: "Show Container"
+                enabled: status !== 0 && containerInplace
+                text: "Show Container to Food Platform"
                 font.pixelSize: 30
                 onClicked: {
                     bio_backend.protocol.runCommand(Protocol_MasterSlave.TRY_TO_SHOW_CONTAINER, [thetag]);
@@ -130,7 +130,7 @@ ColumnLayout {
             }
             Button {
                 id: gobackbutton
-                enabled: showrunning && containerShown
+                enabled: containerShown
                 text: "Container Go Back"
                 font.pixelSize: 30
                 onClicked: {
@@ -140,11 +140,21 @@ ColumnLayout {
             }
             Button {
                 id: deletebutton
-                enabled: status !== 0
-                text: "Delete Container"
+                enabled: status !== 0 && containerInplace
+                text: "Delete Container from Memory"
                 font.pixelSize: 30
                 onClicked: {
                     bio_backend.protocol.runCommand(Protocol_MasterSlave.CANCEL_CONTAINER_BY_TAG, [thetag]);
+                }
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+            }
+            Button {
+                id: endrearingbutton
+                enabled: containerShown
+                text: "Move Container to Exit Platform"
+                font.pixelSize: 30
+                onClicked: {
+                    bio_backend.protocol.runCommand(Protocol_MasterSlave.END_REARING_CYCLE, []);
                 }
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
             }
@@ -161,7 +171,11 @@ ColumnLayout {
         }
     }
 
-    property bool showrunning: false
+    property bool containerInplace:
+        (bio_backend.protocol.systeminfo1.function1InProgress == "NO_RUN" &&
+         bio_backend.protocol.systeminfo1.function2InProgress == "NO_RUN" &&
+         bio_backend.protocol.systeminfo1.function3InProgress == "NO_RUN" &&
+         bio_backend.protocol.systeminfo1.function4InProgress == "NO_RUN")
     property bool containerShown:
         (bio_backend.protocol.systeminfo1.function1InProgress == "SYS_ACTION_USER_SHOW_CONTAINER" &&
          bio_backend.protocol.systeminfo1.function2InProgress == "NO_RUN" &&
@@ -197,9 +211,6 @@ ColumnLayout {
                     errordialog.open();
                     return;
                 }
-                showrunning = true;
-                backbutton.enabled = false;
-                deletebutton.enabled = false;
             }
             else if (cmd == Protocol_MasterSlave.SHOW_CONTAINER_GO_BACK)
             {
@@ -213,9 +224,19 @@ ColumnLayout {
                     errordialog.open();
                     return;
                 }
-                showrunning = false;
-                backbutton.enabled = true;
-                deletebutton.enabled = true;
+            }
+            else if (cmd == Protocol_MasterSlave.END_REARING_CYCLE)
+            {
+                if (master_error != Bioconverter.NO_MASTER_ERROR ||
+                    slave_error != Bioconverter.NO_SYSTEM_ERROR)
+                {
+                    errordialog.title = "END_REARING_CYCLE command error"
+                    errortext.text = "\n";
+                    errortext.text = errortext.text.concat("\nmaster_error: ", master_error);
+                    errortext.text = errortext.text.concat("\nslave_error: ", slave_error);
+                    errordialog.open();
+                    return;
+                }
             }
             else if (cmd == Protocol_MasterSlave.GET_TAGS_NUMBER_AND_POSITION_0TO5 ||
                      cmd == Protocol_MasterSlave.GET_TAGS_NUMBER_AND_POSITION_6TO11 ||
