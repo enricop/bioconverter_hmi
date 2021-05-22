@@ -172,10 +172,10 @@ ColumnLayout {
     }
 
     property bool containerInplace:
-        (bio_backend.protocol.systeminfo1.function1InProgress == "NO_RUN" &&
-         bio_backend.protocol.systeminfo1.function2InProgress == "NO_RUN" &&
-         bio_backend.protocol.systeminfo1.function3InProgress == "NO_RUN" &&
-         bio_backend.protocol.systeminfo1.function4InProgress == "NO_RUN")
+        (bio_backend.protocol.systeminfo1.status == Get_System_Info_1.SYS_STS_AUTO_TASK_NOT_RUNNING &&
+         bio_backend.protocol.systeminfo1.function1InProgress == "NO_RUN" &&
+         bio_backend.protocol.systeminfo1.function2InProgress == "NO_RUN")
+
     property bool containerShown:
         (bio_backend.protocol.systeminfo1.function1InProgress == "SYS_ACTION_USER_SHOW_CONTAINER" &&
          bio_backend.protocol.systeminfo1.function2InProgress == "NO_RUN" &&
@@ -237,6 +237,7 @@ ColumnLayout {
                     errordialog.open();
                     return;
                 }
+                thecontainerparameters.StackView.view.pop(null);
             }
             else if (cmd == Protocol_MasterSlave.GET_TAGS_NUMBER_AND_POSITION_0TO5 ||
                      cmd == Protocol_MasterSlave.GET_TAGS_NUMBER_AND_POSITION_6TO11 ||
