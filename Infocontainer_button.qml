@@ -88,7 +88,7 @@ ItemDelegate {
                 }
                 else if (cmd == Protocol_MasterSlave.GET_SINGLE_CONTAINER_PARAMETERS2_BY_POS)
                 {
-                    thecontainersinfo.StackView.view.push("qrc:/ContainerParameters.qml",
+                    thecontainersinfo.StackView.view.push("qrc:/showcontainer.qml",
                                                     {
                                                         status: bio_backend.protocol.contp1.containers[pos].status,
                                                         foodtype: bio_backend.protocol.contp1.containers[pos].foodtype,

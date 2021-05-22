@@ -9,10 +9,10 @@
         <file>Header.qml</file>
         <file>Footer.qml</file>
         <file>Infocontainer_button.qml</file>
-        <file>ContainerParameters.qml</file>
+        <file>showcontainer.qml</file>
         <file>erroroccurred.qml</file>
         <file>serialmng.qml</file>
-        <file>swappinginfo.qml</file>
+        <file>swapping.qml</file>
         <file>about.qml</file>
         <file>otheroptions.qml</file>
     </qresource>

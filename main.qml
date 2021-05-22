@@ -26,7 +26,7 @@ ApplicationWindow {
             title: qsTr("&System Parameters")
             Action { text: qsTr("&Swap Settings"); onTriggered: {
                     bio_backend.protocol.runCommand(Protocol_MasterSlave.GET_SYSTEM_INFO_2, []);
-                    thestackview.push("qrc:/swappinginfo.qml");
+                    thestackview.push("qrc:/swapping.qml");
                 }
             }
             Action { text: qsTr("&Erase Settings"); onTriggered: thestackview.push("qrc:/otheroptions.qml"); }
